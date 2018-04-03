@@ -1,10 +1,49 @@
-Towers
+Towers = []
 	Ground single
 	Ground AOE
 
 	Air single
 	Air AOE
 
-Life/damage system
+	{
+		Level:
+		Damage:
+		Range:
+		Rate:
+		Upgrade cost:
+		Sell cost:
+		x:
+		y:
+	}
+
+	Obstruction detection -if a creep is in box, cannot build there
+	SPA detection - always a valid SP
+
+Creep
+	Ground one
+	Ground two
+	Air
 	
+	{
+		HP:
+		Speed:
+		x:
+		y:
+		direction:
+	}
+
+	constantly refreshing SPA
+		
+Life/damage system
+	SP 
+	bool[][]
+	1000	1000	1000	0	0	0	1000	1000	1000
+	1000	0	0	0	1000	0	0	0	1000
+	0	1000	0	1000	1000
+	0	1000	0	0	1000
+	0	0	1000	0	1000
+	1000	0	1000	0	1000
+	1000	0	0	0	1000
+	1000	1000	1000	1000	1000
+
 	
