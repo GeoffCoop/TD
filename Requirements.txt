@@ -1,0 +1,90 @@
+OVERALL REQUIREMENTS
+___________________________________________________________________________________________________
+Node.js
+
+Settings
+	(checkbox) display grid
+	(checkbox) display tower range
+	*These must persist on local browser storage
+
+User configurable controls
+	Mostly mouse based, non-configurable
+	Customizable keyboard shortcuts
+		U - upgrade tower
+		S - sell tower
+		G - start next level (go)
+		*Function : KeyCombination
+		*User selects function with mouse, and presses the key (or key combination) for the shortcut,
+		 which immediately changes the shortcut to the the new key.
+		*Must persist to local browser storage
+
+All turrets and creeps must be animated.
+	Turrets
+		Turrets must rotate to shoot in the right direction (cannot shoot unless in the right direction)
+		Creep movement must be animated, and must turn in the proper direction
+		Health bar displayed above each creep. Bar changes from green to red as health is lost.
+		When a creep dies a point value for that creep floats toward the top of the screen from the location 
+		of where it died, persisting for one second.
+		When placing a tower you must show its attack radius, must allow a path to the next exit, or it cannot be built.
+	
+
+	Particles
+		Create a particle syste that allows the game code to start and have a system provide complete management of all 
+		active effects, i.e. one particle manager. One function call = lasting effect.
+		Particle effects for:
+		- when a creep dies
+		- trail on a bomb
+		- when a bomb hits
+		- trail behind missile
+		- Explosion when a missile hits
+		- When a tower is sold.
+	Creeps
+		Creeps enter at random locations and times (for a single entrance)
+		Creeps exit the opposite exit using shortest path.
+	Sound
+		Sounds for firing weapons, explosions, creep death, tower placement, tower sale, etc
+		Music (optional)
+	High scores must persist to the server
+_____________________________________________________________________________________
+GAME REQUIREMENTS
+	Open arena (build your own maze)
+	Arena is square
+	Creeps enter from 1 of 4 openings
+	
+	Two types of ground towers
+		Projectile
+		Bomb
+	Two types of air
+		Projectile
+		Guided missile
+	Three upgrades each
+
+	Creeps
+		Two ground
+		One air
+
+	Levels are manually started by the player, after a level, game is paused and player builds and regroups.
+	Player can build/sell/upgrade before or during a level.
+
+	At least 3 levels
+		1 Ground, left to right
+		2 Ground, left to right and top to bottom
+		3 Ground and air, left to right, top to bottom
+
+	Scoring
+		Resorces earned from destroying creeps
+		Total value of towers
+		Number of levels and waves before dying
+	End game
+		Some number of max creeps escape, if hits 0 you lose.
+
+___________________________________________________________________________________
+UI
+Menu System
+	New Game
+	Options
+		Game Options
+		Keyboard options
+	High Scores
+	Credits
+	
