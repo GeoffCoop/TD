@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Tower Defense Game</title>
+    <header class="container">
+      <h1>Tower Defense</h1>
+      <div>
+        <canvas id = "canvas-main" width = "1000" height = "600" style="border:1px solid #000000;"></canvas>
+      </div>
+      <div id="goldAndHealth">
+        <img src="./images/Gold.png" style="width: 50px; height: 50px; position:absolute; left: 70px; top: 145px;"/>
+        <img src="./images/heart.png" style="width: 50px; height: 50px; position:absolute; left: 180px; top: 145px;"/>
+      </div>
+      <div id="towers">
+        <button onclick="clickedGroundProjectile()" type="button" id="groundProjectile" style="position:absolute; left: 90px;top: 210px; background-image:url('./images/gProjectile.jpg'); width:50px; height: 50px; background-size: 100%;"/>
+          <!-- <img src="./images/gProjectile.jpg" style="width:50px; height:50px;"/>
+        </button> -->
+        <button onclick="clickedGroundBomb()" type="button" id="groundBomb" style="position:absolute; left: 180px;top: 210px; background-image:url('./images/gBomb.jpg'); width:50px; height: 50px; background-size: 100%;"/>
+          <!-- <img src="./images/gBomb.jpg" style="width:50px; height:50px;"/>
+        </button> -->
+        <button onclick="clickedAirProjectile()" type="button" id="airProjectile" style="position:absolute; left: 270px;top: 210px; background-image:url('./images/aProjectile.jpg'); width:50px; height: 50px; background-size: 100%;"/>
+          <!-- <img src="./images/aProjectile.jpg" style="width:50px; height:50px;"/>
+        </button> -->
+        <button onclick="clickedAirMissile()" type="button" id="airMissile" style="position:absolute; left: 360px;top: 210px; background-image:url('./images/aMissile.jpg'); width:50px; height: 50px; background-size: 100%;"/>
+      </div>
+      <img id="image" src="./images/aMissile.jpg" style="position: absolute; width:40px; height:40px; left:-50px; top:-50px;"/>
+
+      <div id="optionsQuitNextLevel">
+        <button onclick="clickedOptions()" type="button" id="options" style="position:absolute; left: 75px;top: 600px; width: 100px; height: 50px;">Options</button>
+        <button onclick="clickedQuit()" type="button" id="quit" style="position:absolute; left: 200px;top: 600px; width: 100px; height: 50px;">Quit</button>
+        <button onclick="clickedPlayNextLevel()" type="button" id="playNextLevel" style="position:absolute; left: 325px;top: 600px; width: 100px; height: 50px;">Next Level</button>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+      <script src = "./js/random.js"></script>
+      <script src="./js/main.js"></script>
+    </header>
+  </head>
+
+  <body>
+  </body>
+
+  <footer>
+    <div class="footer">
+      Created for CS 5410 by Matt Ward
+    </div>
+  </footer>
+
+</html>
