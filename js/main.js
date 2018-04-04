@@ -5,36 +5,36 @@ imgBackground.onload = function() {
 };
 imgBackground.src = './images/grassBackground.jpg';
 
+let imgGroundProjectile = new Image();
+imgGroundProjectile.isReady = false;
+imgGroundProjectile.onload = function() {
+	this.isReady = true;
+};
+imgGroundProjectile.src = './images/gProjectile.jpg';
+
+let imgGroundBomb = new Image();
+imgGroundBomb.isReady = false;
+imgGroundBomb.onload = function() {
+	this.isReady = true;
+};
+imgGroundBomb.src = './images/gBomb.jpg';
+
+let imgAirProjectile = new Image();
+imgAirProjectile.isReady = false;
+imgAirProjectile.onload = function() {
+	this.isReady = true;
+};
+imgAirProjectile.src = './images/aProjectile.jpg';
+
+let imgAirMissile = new Image();
+imgAirMissile.isReady = false;
+imgAirMissile.onload = function() {
+	this.isReady = true;
+};
+imgAirMissile.src = './images/aMissile.jpg';
+
 let score = 0;
 let MyGame = {};
-var circleX=400;
-var circleY=0;
-
-function clickedGroundProjectile(){
-
-}
-function clickedGroundBomb(){
-
-}
-function clickedAirProjectile(){
-
-}
-function clickedAirMissile(){
-	$(document).mousemove(function(e){
-    $("#image").css({left:e.pageX-50-20, top:e.pageY-50-20});
-		circleX=e.pageX-100-20;
-		circleY=e.pageY-120-20;
-	});
-}
-function clickedOptions(){
-
-}
-function clickedQuit(){
-
-}
-function clickedPlayNextLevel(){
-
-}
 
 MyGame.graphics = (function() {
 	'use strict';
@@ -60,27 +60,51 @@ MyGame.graphics = (function() {
 
 MyGame.main = (function (graphics) {
 	'use strict';
-	var blahx=400;
-	var blahy=0;
 	var edgeArr=[400, 0, 440, 0, 480, 0, 520, 0, 560, 0, 600, 0, 760, 0, 800, 0, 840, 0, 880, 0, 920, 0, 960, 0, 960, 40, 960, 80, 960, 120, 960, 160, 960, 200, 960, 360, 960, 400, 960, 440, 960, 480, 960, 520, 960, 560, 920, 560, 880, 560, 840, 560, 800, 560, 760, 560, 600, 560, 560, 560, 520, 560, 480, 560, 440, 560, 400, 560, 400, 520, 400, 480, 400, 440, 400, 400, 400, 360, 400, 200, 400, 160, 400, 120, 400, 80, 400, 40]
-	var blahArr=[];
 	console.log('game initializing...');
-	let lastTimeStamp = performance.now();
-	let confettiParticles = [];
-	let canvas = document.getElementById('canvas-main');
-	let context = canvas.getContext('2d');
-	let ctx = graphics.context;
-	let inputStage = [];
+	var lastTimeStamp = performance.now();
+	var confettiParticles = [];
+	var canvas = document.getElementById('canvas-main');
+	var context = canvas.getContext('2d');
+	var ctx = graphics.context;
+	var inputStage = [];
+	var towerPlacingGlowX=-120;
+	var towerPlacingGlowY=-120;
+	var placingTower = false;
+	var towerType = 0;
+	var taken = false;
+	var gridSize=15;
+	var menuSelectedTower=-1;
+	var towers=[];
 	var grid = []
-	for (let row = 0; row < 15; row++) {
+	for (let row = 0; row < gridSize; row++) {
 		grid.push([]);
-		for (let col = 0; col < 15; col++) {
+		for (let col = 0; col < gridSize; col++) {
 			grid[row].push({
 				x: 400+row*40, y: col*40, occupied: false
 			});
 		}
 	}
-	// console.log(grid)
+	document.addEventListener("click", click);
+	function makeTower(x,y, type){
+		towers.push({
+			type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
+			level: 1,
+			levelNext: 2,
+			damage: 10,
+			damageNext: 15,
+			range: 8,
+			rangeNext: 10,
+			rate: 10,
+			rateNext: 15,
+			initialCost: 10,
+			upgradeCost: 5,
+			sellFor: 8,
+			x: x,
+			y: y
+		});
+		grid[(x-400)/40][y/40].occupied=true;
+	}
 
 	function rgb(){
 	  let r = Random.nextGaussian(127,127);
@@ -140,24 +164,24 @@ MyGame.main = (function (graphics) {
 		for (let particle = 0; particle < confettiParticles.length; particle++) {
 			drawConfetti(confettiParticles[particle]);
 		}
-		graphics.context.font = "60px Arial";
-		graphics.context.fillStyle = "red";
-		graphics.context.fillText("YOU WIN!",canvas.width/2-160,canvas.height/2);
+		ctx.font = "60px Arial";
+		ctx.fillStyle = "red";
+		ctx.fillText("YOU WIN!",canvas.width/2-160,canvas.height/2);
 	}
 
 	function drawConfetti(p) {
 		if (p.alive > 100) {
-			graphics.context.save();
-			graphics.context.translate(p.position.x + p.size / 2, p.position.y + p.size / 2);
-			graphics.context.rotate(p.rotation);
-			graphics.context.translate(-(p.position.x + p.size / 2), -(p.position.y + p.size / 2));
+			ctx.save();
+			ctx.translate(p.position.x + p.size / 2, p.position.y + p.size / 2);
+			ctx.rotate(p.rotation);
+			ctx.translate(-(p.position.x + p.size / 2), -(p.position.y + p.size / 2));
 
-			graphics.context.fillStyle = p.fill;
-			graphics.context.strokeStyle = p.stroke;
-			graphics.context.fillRect(p.position.x, p.position.y, p.size, p.size);
-			graphics.context.strokeRect(p.position.x, p.position.y, p.size, p.size);
+			ctx.fillStyle = p.fill;
+			ctx.strokeStyle = p.stroke;
+			ctx.fillRect(p.position.x, p.position.y, p.size, p.size);
+			ctx.strokeRect(p.position.x, p.position.y, p.size, p.size);
 
-			graphics.context.restore();
+			ctx.restore();
 		}
 	}
 
@@ -179,7 +203,6 @@ MyGame.main = (function (graphics) {
 	}
 
 	function drawMenu(){
-		// var ctx = graphics.context;
 		ctx.globalAlpha = 0.5;
 		ctx.fillStyle="gray";
 		var menuRectX=0;
@@ -191,40 +214,127 @@ MyGame.main = (function (graphics) {
 		ctx.font = "50px Arial";
 		ctx.fillStyle = "black";
 		ctx.fillText("Tower Defense!",25,55);
+		ctx.lineWidth=3;
 		ctx.moveTo(0, 75);
 		ctx.lineTo(400, 75);
-		ctx.lineWidth = 3;
 		ctx.font = "30px Arial";
 		ctx.fillStyle = "black";
 		ctx.fillText("13         10",75,112);
 		ctx.moveTo(0, 125);
 		ctx.lineTo(400, 125);
-		ctx.lineWidth = 3;
 		ctx.moveTo(0, 205);
 		ctx.lineTo(400, 205);
 		ctx.lineWidth = 3;
 		ctx.globalAlpha = 0.75;
-		ctx.fillStyle = "gray";
-		ctx.fillRect(30,220,330,510-220-15);
-		ctx.globalAlpha = 1;
+		ctx.stroke();
+		if(menuSelectedTower!=-1){
+			ctx.globalAlpha = 0.5;
+			ctx.fillStyle="white";
+			ctx.beginPath();
+			ctx.arc(towers[menuSelectedTower].x+20,towers[menuSelectedTower].y+20,120,0,Math.PI*2,true);
+			ctx.closePath();
+			ctx.fill();
+			ctx.globalAlpha = 1;
+			ctx.fillStyle = "gray";
+			ctx.fillRect(30,220,330,280);
+			ctx.moveTo(30,222);
+			ctx.lineTo(360,220);
+			ctx.moveTo(360,220);
+			ctx.lineTo(360,500);
+			ctx.moveTo(360,500);
+			ctx.lineTo(30,500);
+			ctx.moveTo(30,500);
+			ctx.lineTo(30,222);
+			ctx.globalAlpha = 1;
+			ctx.fillStyle = "black";
+			ctx.lineWidth=2;
+			ctx.moveTo(30, 260);
+			ctx.lineTo(360, 260);
+			ctx.stroke();
+			ctx.lineWidth=1;
+			ctx.moveTo(150, 260);
+			ctx.lineTo(150, 500);
+			ctx.moveTo(250, 260);
+			ctx.lineTo(250, 500);
+			ctx.moveTo(30, 290);
+			ctx.lineTo(360, 290);
+			ctx.moveTo(30, 320);
+			ctx.lineTo(360, 320);
+			ctx.moveTo(30, 350);
+			ctx.lineTo(360, 350);
+			ctx.moveTo(30, 380);
+			ctx.lineTo(360, 380);
+			ctx.moveTo(30, 410);
+			ctx.lineTo(360, 410);
+			ctx.moveTo(30, 440);
+			ctx.lineTo(360, 440);
+			ctx.moveTo(30, 470);
+			ctx.lineTo(360, 470);
+			ctx.font = "16px Arial";
+			var tType="";
+			var tTargets="";
+			if(towers[menuSelectedTower].type==1){
+				tType="Ground Projectile";
+				tTargets="Ground";
+			}
+			else if(towers[menuSelectedTower].type==2){
+				tType="Ground Bomb";
+				tTargets="Ground";
+			}
+			else if(towers[menuSelectedTower].type==3){
+				tType="Air Projectile";
+				tTargets="Air";
+			}
+			else if(towers[menuSelectedTower].type==4){
+				tType="Air Missile";
+				tTargets="Air";
+			}
+			ctx.fillText(tType,100,250);
+			ctx.fillText("Current",165,280);
+			ctx.fillText("Next Level",265,280);
+			ctx.fillText("Level",40,310);
+			ctx.fillText(towers[menuSelectedTower].level,165,310);
+			ctx.fillText(towers[menuSelectedTower].levelNext,265,310);
+			ctx.fillText("Damage",40,340);
+			ctx.fillText(towers[menuSelectedTower].damage,165,340);
+			ctx.fillText(towers[menuSelectedTower].damageNext,265,340);
+			ctx.fillText("Range",40,370);
+			ctx.fillText(towers[menuSelectedTower].range,165,370);
+			ctx.fillText(towers[menuSelectedTower].rangeNext,265,370);
+			ctx.fillText("Firing Rate",40,400);
+			ctx.fillText(towers[menuSelectedTower].rate,165,400);
+			ctx.fillText(towers[menuSelectedTower].rateNext,265,400);
+			ctx.fillText("Targets",40,430);
+			ctx.fillText(tTargets,165,430);
+			ctx.fillText("---",265,430);
+			ctx.fillText("Upgrade Cost",40,460);
+			ctx.fillText(towers[menuSelectedTower].upgradeCost,165,460);
+			ctx.fillText("Sell For",40,490);
+			ctx.fillText(towers[menuSelectedTower].sellFor,165,490);
+			var show = document.getElementById("upgradeOrSellButtons");
+			show.style.display = "block";
+			ctx.stroke();
+		}
 		ctx.moveTo(0, 510);
 		ctx.lineTo(400, 510);
-		ctx.lineWidth = 3;
+		ctx.moveTo(400,0);
+		ctx.lineTo(400,600);
+		ctx.stroke();
 	}
 
 	function drawHighScores(){
 		menuPause = true;
-		graphics.context.globalAlpha = 0.95;
-		graphics.context.fillStyle="gray";
+		ctx.globalAlpha = 0.95;
+		ctx.fillStyle="gray";
 		var menuRectX=200;
 		var menuRectY=50-5;
 		var menuRectWidth=canvas.width-400;
 		var menuRectHeight=canvas.height-100+10;
-		graphics.context.fillRect(menuRectX,menuRectY,menuRectWidth,menuRectHeight);
-		graphics.context.font = "50px Arial";
-		graphics.context.fillStyle = "black";
-		graphics.context.fillText("HIGH SCORES",menuRectX+23,menuRectY+60);
-		graphics.context.font = "20px Arial";
+		ctx.fillRect(menuRectX,menuRectY,menuRectWidth,menuRectHeight);
+		ctx.font = "50px Arial";
+		ctx.fillStyle = "black";
+		ctx.fillText("HIGH SCORES",menuRectX+23,menuRectY+60);
+		ctx.font = "20px Arial";
 		var storedHSNames = [];
 		var storedHsScores = [];
 		if(localStorage.getItem("highscore") !== null){
@@ -232,90 +342,230 @@ MyGame.main = (function (graphics) {
 			storedHsScores = JSON.parse(localStorage.getItem("score"));
 		}
 		for (var hs=0;hs<storedHSNames.length;hs++){
-			graphics.context.fillText(storedHsScores[hs]+" - "+storedHSNames[hs],menuRectX+20,menuRectY+100+30*hs);
+			ctx.fillText(storedHsScores[hs]+" - "+storedHSNames[hs],menuRectX+20,menuRectY+100+30*hs);
 		}
 		if(hsMenuItemSelected==0){
-			var grd=graphics.context.createLinearGradient(menuRectX+50,menuRectY+menuRectHeight-155-15,menuRectX+50,menuRectY+menuRectHeight-155-15+10);
+			var grd=ctx.createLinearGradient(menuRectX+50,menuRectY+menuRectHeight-155-15,menuRectX+50,menuRectY+menuRectHeight-155-15+10);
 			grd.addColorStop(0,"#979799");
 			grd.addColorStop(1,"#3f3f3f");
-			graphics.context.fillStyle=grd;
+			ctx.fillStyle=grd;
 		}
 		else{
-			graphics.context.fillStyle="black";
+			ctx.fillStyle="black";
 		}
-		graphics.context.fillRect(menuRectX+50,menuRectY+menuRectHeight-155-15,menuRectWidth-100,50-5);
-		graphics.context.font = "30px Arial";
-		graphics.context.fillStyle = "#d18f1d";
-		graphics.context.fillText("RESET SCORES",menuRectX+80,menuRectY+menuRectHeight-135-2.5);
+		ctx.fillRect(menuRectX+50,menuRectY+menuRectHeight-155-15,menuRectWidth-100,50-5);
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "#d18f1d";
+		ctx.fillText("RESET SCORES",menuRectX+80,menuRectY+menuRectHeight-135-2.5);
 		if(hsMenuItemSelected==1){
-			var grd=graphics.context.createLinearGradient(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectX+50,menuRectY+menuRectHeight-70-15+10);
+			var grd=ctx.createLinearGradient(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectX+50,menuRectY+menuRectHeight-70-15+10);
 			grd.addColorStop(0,"#979799");
 			grd.addColorStop(1,"#3f3f3f");
-			graphics.context.fillStyle=grd;
+			ctx.fillStyle=grd;
 		}
 		else{
-			graphics.context.fillStyle="black";
+			ctx.fillStyle="black";
 		}
-		graphics.context.fillRect(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectWidth-100,50-5);
-		graphics.context.font = "30px Arial";
-		graphics.context.fillStyle = "#d18f1d";
-		graphics.context.fillText("BACK",menuRectX+165,menuRectY+menuRectHeight-35-17.5);
-		graphics.context.globalAlpha = 1.0;
+		ctx.fillRect(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectWidth-100,50-5);
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "#d18f1d";
+		ctx.fillText("BACK",menuRectX+165,menuRectY+menuRectHeight-35-17.5);
+		ctx.globalAlpha = 1.0;
 	}
 
 	function drawCredits(){
 		menuPause = true;
-		graphics.context.globalAlpha = 0.95;
-		graphics.context.fillStyle="gray";
+		ctx.globalAlpha = 0.95;
+		ctx.fillStyle="gray";
 		var menuRectX=200;
 		var menuRectY=50-5;
 		var menuRectWidth=canvas.width-400;
 		var menuRectHeight=canvas.height-100+10;
-		graphics.context.fillRect(menuRectX,menuRectY,menuRectWidth,menuRectHeight);
-		graphics.context.font = "50px Arial";
-		graphics.context.fillStyle = "black";
-		graphics.context.fillText("CREDITS",menuRectX+90,menuRectY+70);
-		graphics.context.font = "20px Arial";
-		graphics.context.fillText("This game was created by Matt Ward as",menuRectX+20,menuRectY+120);
-		graphics.context.fillText("a project for CS 5410.",menuRectX+22,menuRectY+150);
-		graphics.context.fillStyle="#3f3f3f";
-		graphics.context.fillRect(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectWidth-100,50-5);
-		graphics.context.font = "30px Arial";
-		graphics.context.fillStyle = "#d18f1d";
-		graphics.context.fillText("BACK",menuRectX+165,menuRectY+menuRectHeight-35-17.5);
-		graphics.context.globalAlpha = 1.0;
+		ctx.fillRect(menuRectX,menuRectY,menuRectWidth,menuRectHeight);
+		ctx.font = "50px Arial";
+		ctx.fillStyle = "black";
+		ctx.fillText("CREDITS",menuRectX+90,menuRectY+70);
+		ctx.font = "20px Arial";
+		ctx.fillText("This game was created by Matt Ward as",menuRectX+20,menuRectY+120);
+		ctx.fillText("a project for CS 5410.",menuRectX+22,menuRectY+150);
+		ctx.fillStyle="#3f3f3f";
+		ctx.fillRect(menuRectX+50,menuRectY+menuRectHeight-70-15,menuRectWidth-100,50-5);
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "#d18f1d";
+		ctx.fillText("BACK",menuRectX+165,menuRectY+menuRectHeight-35-17.5);
+		ctx.globalAlpha = 1.0;
 	}
 
 	function handleInputs(keyCode, elapsedTime){
 		if (keyCode === 39) { //right
-			blahx+=40;
-			circleX+=40;
 		}
 		if (keyCode === 37) { //left
-			blahx-=40;
-			circleX-=40;
 		}
 		if (keyCode === 38) { //up
-			blahy-=40;
-			circleY-=40;
 		}
 		if (keyCode === 40) { //down
-			blahy+=40;
-			circleY+=40;
 		}
 		if (keyCode === 13) { //enter
-			blahArr.push(blahx, blahy)
 		}
 		if (keyCode === 27) { //escape
-
+		}
+		if (keyCode === 68) { //D
+			followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
 		}
 	}
 
 	function renderBackground(){
 		if (imgBackground.isReady) {
-			graphics.context.drawImage(imgBackground,
+			ctx.drawImage(imgBackground,
 			0,0, canvas.width, canvas.height);
 		}
+	}
+
+	function followMouse(x){
+		placingTower=true;
+		towerType = x;
+		menuSelectedTower=-1;
+		$(document).mousemove(function(e){
+			$("#image"+x).css({left:e.pageX-50, top:e.pageY-50-20});
+			towerPlacingGlowX=e.pageX-100;
+			towerPlacingGlowY=e.pageY-120-20;
+		});
+	}
+
+	function checkListeners(){
+		var button = document.getElementById("groundProjectile");
+    if (button.addEventListener) {
+      button.addEventListener('click', function() {
+				followMouse(1);
+			});
+		}
+		var button2 = document.getElementById("groundBomb");
+    if (button2.addEventListener) {
+      button2.addEventListener('click', function() {
+				followMouse(2);
+			});
+		}
+		var button3 = document.getElementById("airProjectile");
+    if (button3.addEventListener) {
+      button3.addEventListener('click', function() {
+				followMouse(3);
+			});
+		}
+		var button4 = document.getElementById("airMissile");
+    if (button4.addEventListener) {
+      button4.addEventListener('click', function() {
+				followMouse(4);
+			});
+		}
+
+	}
+
+	function click(event) {
+		let canvas = document.getElementById('canvas-main');
+		var rect = canvas.getBoundingClientRect();
+		var mousePointerX = 400+40*Math.floor((event.clientX-rect.left-400)/40);
+		var mousePointerY = 40*Math.floor((event.clientY-rect.top)/40);
+		if(placingTower){
+			for(var t=0; t<towers.length;t++){
+				if(towers[t].x == mousePointerX && towers[t].y == mousePointerY){
+					taken=true;
+				}
+			}
+			for(var e=0; e<edgeArr.length;e+=2){
+				if(edgeArr[e] == mousePointerX && edgeArr[e+1] == mousePointerY){
+					taken=true;
+				}
+			}
+			if(taken!=true){
+				if(mousePointerX>=400 && mousePointerY>=0){
+					makeTower(mousePointerX,mousePointerY,towerType)
+					towerPlacingGlowX=-120;
+					towerPlacingGlowY=-120;
+					placingTower = false;
+					towerType = 0;
+					$("#image"+1).css({left:-50, top:-50});
+					$("#image"+2).css({left:-50, top:-50});
+					$("#image"+3).css({left:-50, top:-50});
+					$("#image"+4).css({left:-50, top:-50});
+					$(document).off('mousemove');
+				}
+			}
+			else{
+				taken=false;
+			}
+		}
+		else{
+			var anyTowerSelected = false;
+			for(var t=0; t<towers.length;t++){
+				if(towers[t].x == mousePointerX && towers[t].y == mousePointerY){
+					anyTowerSelected=true;
+					menuSelectedTower=t;
+				}
+			}
+			if(anyTowerSelected==false){
+				menuSelectedTower=-1;
+				var show = document.getElementById("upgradeOrSellButtons");
+				show.style.display = "none";
+			}
+		}
+	}
+
+	function renderTowers(x,y,type){
+		if(type==1){
+			if (imgGroundProjectile.isReady) {
+				ctx.drawImage(imgGroundProjectile,
+				x,y, 40,40);
+			}
+		}
+		else if(type==2){
+			if (imgGroundBomb.isReady) {
+				ctx.drawImage(imgGroundBomb,
+				x,y, 40,40);
+			}
+		}
+		else if(type==3){
+			if (imgAirProjectile.isReady) {
+				ctx.drawImage(imgAirProjectile,
+				x,y, 40,40);
+			}
+		}
+		else if(type==4){
+			if (imgAirMissile.isReady) {
+				ctx.drawImage(imgAirMissile,
+				x,y, 40,40);
+			}
+		}
+	}
+
+	function drawDots(){
+		ctx.globalAlpha = 0.75;
+		ctx.fillStyle="white";
+		ctx.beginPath();
+		ctx.arc(towerPlacingGlowX+20,towerPlacingGlowY+20,120,0,Math.PI*2,true);
+		ctx.closePath();
+		ctx.fill();
+		ctx.globalAlpha = 1;
+		for (var x=0; x<edgeArr.length; x+=2){
+			ctx.fillStyle="red";
+			ctx.beginPath();
+			var xx = edgeArr[x];
+			var yy = edgeArr[x+1];
+			ctx.arc(xx+20,yy+20,10,0,Math.PI*2,true);
+			ctx.closePath();
+			ctx.fill();
+			grid[(xx-400)/40][yy/40].occupied=true;
+		}
+		// ctx.fillStyle="blue";
+		// for (var i=0;i<grid.length;i++){
+		// 	for (var j=0;j<grid.length;j++){
+		// 		if(grid[i][j].occupied==true){
+		// 			ctx.beginPath();
+		// 			ctx.arc(400+i*40,j*40,5,0,Math.PI*2,true);
+		// 			ctx.closePath();
+		// 			ctx.fill();
+		// 		}
+		// 	}
+		// }
 	}
 
 	function processInput(elapsedTime) {
@@ -327,53 +577,19 @@ MyGame.main = (function (graphics) {
 
 	function update(elapsedTime) {
 		processInput(elapsedTime);
+		checkListeners();
 	}
 
 	function render() {
 		graphics.clear();
 		renderBackground();
-		drawGrid(context, canvas.width-400, canvas.height, 40)
+		// drawGrid(context, canvas.width-400, canvas.height, 40)
 		drawMenu();
-		ctx.globalAlpha = 0.75;
-		graphics.context.fillStyle="white";
-		graphics.context.beginPath();
-		graphics.context.arc(circleX+20,circleY+20,120,0,Math.PI*2,true);
-		graphics.context.closePath();
-		graphics.context.fill();
-		ctx.globalAlpha = 1;
-		graphics.context.fillStyle="black";
-		graphics.context.beginPath();
-		graphics.context.arc(blahx+20,blahy+20,10,0,Math.PI*2,true);
-		graphics.context.closePath();
-		graphics.context.fill();
-		for (var x=0; x<edgeArr.length; x+=2){
-			graphics.context.fillStyle="red";
-			graphics.context.beginPath();
-			var xx = edgeArr[x];
-			var yy = edgeArr[x+1];
-			graphics.context.arc(xx+20,yy+20,10,0,Math.PI*2,true);
-			graphics.context.closePath();
-			graphics.context.fill();
+		drawDots();
+		for (var t=0; t<towers.length; t++){
+			renderTowers(towers[t].x,towers[t].y,towers[t].type);
 		}
-		for (var x=0; x<blahArr.length; x+=2){
-			graphics.context.fillStyle="white";
-			graphics.context.beginPath();
-			var xx = blahArr[x];
-			var yy = blahArr[x+1];
-			graphics.context.arc(xx+20,yy+20,10,0,Math.PI*2,true);
-			graphics.context.closePath();
-			graphics.context.fill();
-		}
-		// for (var row=0; row<grid.length; row++){
-		// 	for (var col=0; col<grid.length; col++){
-		// 		graphics.context.fillStyle="blue";
-		// 		graphics.context.beginPath();
-		// 		graphics.context.arc(grid[row][col].x+20,grid[row][col].y+20,10,0,Math.PI*2,true);
-		// 		graphics.context.closePath();
-		// 		graphics.context.fill();
-		// 	}
-		// }
-		graphics.context.stroke();
+		ctx.stroke();
 	}
 	window.addEventListener('keydown', function(event) {
 			inputStage.push(event.keyCode);
@@ -388,34 +604,3 @@ MyGame.main = (function (graphics) {
 
 	requestAnimationFrame(gameLoop);
 }(MyGame.graphics));
-
-function clickedSubmitHighScore(){
-	var show = document.getElementById("inputHighScore");
-	// show.style.visibility = "hidden";
-	var hsName = []
-	var hsScore = []
-	if(localStorage.getItem("highscore") !== null){
-		hsName = JSON.parse(localStorage.getItem("highscore"))
-		hsScore = JSON.parse(localStorage.getItem("score"))
-	}
-	if(hsScore.length>7){
-		hsScore.length=7;
-		hsName.length=7;
-	}
-	var n=0;
-	var highscoreName = document.getElementById("highScoreNameText").value;
-	for (var i=0;i<hsScore.length;i++){
-		if(hsScore[i]<=score){
-			n = i;
-			i=hsScore.length;
-		}
-		else{
-			n=hsScore.length;
-		}
-	}
-	hsScore.splice(n,0,score);
-	hsName.splice(n,0,highscoreName);
-	localStorage.setItem("highscore", JSON.stringify(hsName));
-	localStorage.setItem("score", JSON.stringify(hsScore));
-	gameState=2;
-}
