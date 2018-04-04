@@ -61,6 +61,10 @@ MyGame.graphics = (function() {
 MyGame.main = (function (graphics) {
 	'use strict';
 	var edgeArr=[400, 0, 440, 0, 480, 0, 520, 0, 560, 0, 600, 0, 760, 0, 800, 0, 840, 0, 880, 0, 920, 0, 960, 0, 960, 40, 960, 80, 960, 120, 960, 160, 960, 200, 960, 360, 960, 400, 960, 440, 960, 480, 960, 520, 960, 560, 920, 560, 880, 560, 840, 560, 800, 560, 760, 560, 600, 560, 560, 560, 520, 560, 480, 560, 440, 560, 400, 560, 400, 520, 400, 480, 400, 440, 400, 400, 400, 360, 400, 200, 400, 160, 400, 120, 400, 80, 400, 40]
+	var verticalEdges=[[960, 40], [960, 80], [960, 120], [960, 160], [960, 400], [960, 440], [960, 480], [960, 520], [400, 520], [400, 480], [400, 440], [400, 400], [400, 160], [400, 120], [400, 80], [400, 40]]
+	var horizEdges=[[440, 0], [480, 0], [520, 0], [560, 0], [800, 0], [840, 0], [880, 0], [920, 0], [920, 560], [880, 560], [840, 560], [800, 560], [560, 560], [520, 560], [480, 560], [440, 560]]
+	var cornerEdges=[[400,0],[960,0],[400,560],[960,560]]
+	var middleEdges=[[600,0],[760,0],[600,560],[760,560],[400,200],[400,360],[960,200],[960,360]]
 	console.log('game initializing...');
 	var lastTimeStamp = performance.now();
 	var confettiParticles = [];
@@ -73,6 +77,11 @@ MyGame.main = (function (graphics) {
 	var placingTower = false;
 	var towerType = 0;
 	var taken = false;
+	var inOptionsMenu = false;
+	var showGrid = true;
+	var showTowerCoverage = false;
+	var showKreepPath = false;
+	var muteSoundEffects = false;
 	var gridSize=15;
 	var menuSelectedTower=-1;
 	var towers=[];
@@ -86,6 +95,7 @@ MyGame.main = (function (graphics) {
 		}
 	}
 	document.addEventListener("click", click);
+	checkListeners();
 	function makeTower(x,y, type){
 		towers.push({
 			type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
@@ -322,6 +332,39 @@ MyGame.main = (function (graphics) {
 		ctx.stroke();
 	}
 
+	function drawOptionsMenu(){
+		var show = document.getElementById("towers");
+		show.style.display = "none";
+		var show = document.getElementById("optionsMenu");
+		show.style.display = "block";
+		ctx.fillStyle="gray";
+		ctx.globalAlpha = .9;
+		ctx.fillRect(0,125,400,385)
+		ctx.globalAlpha = 1;
+		ctx.fillStyle="black"
+		ctx.lineWidth=1;
+		ctx.moveTo(0,180);
+		ctx.lineTo(400,180);
+		ctx.moveTo(0,320);
+		ctx.lineTo(400,320);
+		ctx.moveTo(0,370);
+		ctx.lineTo(400,370);
+		ctx.font = "30px Arial";
+		ctx.fillText("Options",150,162);
+		ctx.font = "16px Arial";
+		ctx.fillText("Show Grid",50,210);
+		ctx.fillText("Show Tower Coverage",50,240);
+		ctx.fillText("Show Kreep Path",50,270);
+		ctx.fillText("Mute Sound Effects",50,300);
+		ctx.font = "30px Arial";
+		ctx.fillText("Controls",150,355);
+		ctx.font = "16px Arial";
+		ctx.fillText("U",200,410);
+		ctx.fillText("S",200,440);
+		ctx.fillText("G",200,470);
+		ctx.stroke();
+	}
+
 	function drawHighScores(){
 		menuPause = true;
 		ctx.globalAlpha = 0.95;
@@ -406,11 +449,20 @@ MyGame.main = (function (graphics) {
 		if (keyCode === 40) { //down
 		}
 		if (keyCode === 13) { //enter
+
 		}
 		if (keyCode === 27) { //escape
 		}
 		if (keyCode === 68) { //D
 			followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
+		}
+		if (keyCode === 79) { //O
+			if(inOptionsMenu){ //TODO - Remove this - This is just to help quickly draw mazes!
+				inOptionsMenu=false;
+			}
+			else{
+				inOptionsMenu=true;
+			}
 		}
 	}
 
@@ -457,7 +509,74 @@ MyGame.main = (function (graphics) {
 				followMouse(4);
 			});
 		}
+		var button5 = document.getElementById("options");
+    if (button5.addEventListener) {
+      button5.addEventListener('mouseup', function() {
+				if(inOptionsMenu){
+					inOptionsMenu=false;
+				}
+				else{
+					inOptionsMenu=true;
+				}
+			});
+		}
+		var button6 = document.getElementById("quit");
+    if (button6.addEventListener) {
+      button6.addEventListener('click', function() {
 
+			});
+		}
+		var button7 = document.getElementById("playNextLevel");
+    if (button7.addEventListener) {
+      button7.addEventListener('click', function() {
+
+			});
+		}
+		var button8 = document.getElementById("upgradeKeyboardShortcut");
+    if (button8.addEventListener) {
+      button8.addEventListener('click', function() {
+
+			});
+		}
+		var button9 = document.getElementById("sellKeyboardShortcut");
+    if (button9.addEventListener) {
+      button9.addEventListener('click', function() {
+
+			});
+		}
+		var button10 = document.getElementById("playNextLevelKeyboardShortcut");
+    if (button10.addEventListener) {
+      button10.addEventListener('click', function() {
+
+			});
+		}
+	}
+
+	function checkCheckBoxes(){
+		if(document.querySelector('#showGridCheckBox').checked){
+			showGrid = true;
+		}
+		else{
+			showGrid = false;
+		}
+		if(document.querySelector('#showTowerCoverageCheckBox').checked){
+			showTowerCoverage = true;
+		}
+		else{
+			showTowerCoverage = false;
+		}
+		if(document.querySelector('#showKreepPathCheckBox').checked){
+			showKreepPath = true;
+		}
+		else{
+			showKreepPath = false;
+		}
+		if(document.querySelector('#muteSoundEffectsCheckBox').checked){
+			muteSoundEffects = true;
+		}
+		else{
+			muteSoundEffects = false;
+		}
 	}
 
 	function click(event) {
@@ -477,8 +596,19 @@ MyGame.main = (function (graphics) {
 				}
 			}
 			if(taken!=true){
-				if(mousePointerX>=400 && mousePointerY>=0){
+				if(mousePointerX>=400 && mousePointerY>=0 && mousePointerX<=1000 && mousePointerY<=600){
 					makeTower(mousePointerX,mousePointerY,towerType)
+					towerPlacingGlowX=-120;
+					towerPlacingGlowY=-120;
+					placingTower = false;
+					towerType = 0;
+					$("#image"+1).css({left:-50, top:-50});
+					$("#image"+2).css({left:-50, top:-50});
+					$("#image"+3).css({left:-50, top:-50});
+					$("#image"+4).css({left:-50, top:-50});
+					$(document).off('mousemove');
+				}
+				else if(mousePointerX>=0 && mousePointerY>=200 && mousePointerX<=400 && mousePointerY<=510){
 					towerPlacingGlowX=-120;
 					towerPlacingGlowY=-120;
 					placingTower = false;
@@ -537,6 +667,18 @@ MyGame.main = (function (graphics) {
 		}
 	}
 
+	function drawAllTowerCoverages(){
+		for (var t=0; t<towers.length; t++){
+			ctx.globalAlpha = 0.3;
+			ctx.fillStyle="white";
+			ctx.beginPath();
+			ctx.arc(towers[t].x+20,towers[t].y+20,120,0,Math.PI*2,true);
+			ctx.closePath();
+			ctx.fill();
+			ctx.globalAlpha = 1;
+		}
+	}
+
 	function drawDots(){
 		ctx.globalAlpha = 0.75;
 		ctx.fillStyle="white";
@@ -560,7 +702,7 @@ MyGame.main = (function (graphics) {
 		// 	for (var j=0;j<grid.length;j++){
 		// 		if(grid[i][j].occupied==true){
 		// 			ctx.beginPath();
-		// 			ctx.arc(400+i*40,j*40,5,0,Math.PI*2,true);
+		// 			ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
 		// 			ctx.closePath();
 		// 			ctx.fill();
 		// 		}
@@ -577,17 +719,39 @@ MyGame.main = (function (graphics) {
 
 	function update(elapsedTime) {
 		processInput(elapsedTime);
-		checkListeners();
+		checkCheckBoxes();
 	}
 
 	function render() {
 		graphics.clear();
 		renderBackground();
-		// drawGrid(context, canvas.width-400, canvas.height, 40)
+		if(showGrid){
+			drawGrid(context, canvas.width-400, canvas.height, 40)
+		}
 		drawMenu();
 		drawDots();
 		for (var t=0; t<towers.length; t++){
 			renderTowers(towers[t].x,towers[t].y,towers[t].type);
+		}
+		if(placingTower){
+			var show = document.getElementById("upgradeOrSellButtons");
+			show.style.display = "none";
+			ctx.fillStyle="red";
+			ctx.globalAlpha = .3;
+			ctx.fillRect(0,205,400,305)
+			ctx.globalAlpha = 1;
+		}
+		if(showTowerCoverage){
+			drawAllTowerCoverages();
+		}
+		if(inOptionsMenu){
+			drawOptionsMenu();
+		}
+		else{
+			var show = document.getElementById("towers");
+			show.style.display = "block";
+			var show = document.getElementById("optionsMenu");
+			show.style.display = "none";
 		}
 		ctx.stroke();
 	}
