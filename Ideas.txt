@@ -10,6 +10,7 @@ Towers = []
 		Damage:
 		Range:
 		Rate:
+		Cost:
 		Upgrade cost:
 		Sell cost:
 		x:
@@ -35,15 +36,23 @@ Creep
 	constantly refreshing SPA
 		
 Life/damage system
-	SP 
-	bool[][]
-	1000	1000	1000	0	0	0	1000	1000	1000
-	1000	0	0	0	1000	0	0	0	1000
-	0	1000	0	1000	1000
-	0	1000	0	0	1000
-	0	0	1000	0	1000
-	1000	0	1000	0	1000
-	1000	0	0	0	1000
-	1000	1000	1000	1000	1000
+	
+	Creeps: wave 1 50 hp
+		wave 2 75
+		wave 3 100
+		wave 3 100 flying
+
+	Ground one: SINGLE	10 / 20 / 40 damage
+	Ground two: AOE		40 / 60 / 100 damage (significantly lower fire rate)
+	Air one:    SINGLE	30 damage very fast attack rate
+			or sniper -> 1 shot, one kill VERY slow attack rate
+	Air two:    AOE         
+
+	Round 1: (right to left)
+		5 towers single target
+ 		10 pop
+	
+	
+	
 
 	
