@@ -115,13 +115,15 @@ MyGame.main = (function(graphics) {
     [960, 200],
     [960, 360]
   ]
-	var entrancesOrExitsFirstRound = [
-		[400,240],
-		[400,280],
-		[400,320],
-		[960,240],
-		[960,280],
-		[960,320],
+	var entrancesFirstRound = [
+		{x:400,y:240},
+		{x:400,y:280},
+		{x:400,y:320}
+	]
+	var exitsFirstRound = [
+		{x:960,y:240},
+		{x:960,y:280},
+		{x:960,y:320}
 	]
 	var entrancesOrExitsSecondAndThirdRounds = [
 		[400,240],
@@ -135,7 +137,7 @@ MyGame.main = (function(graphics) {
 		[720,0],
 		[640,560],
 		[680,560],
-		[720,560],
+		[720,560]
 	]
 
 	var vEdges = [].concat.apply([],verticalEdges);
@@ -173,14 +175,19 @@ MyGame.main = (function(graphics) {
       grid[row].push({
         x: 400 + row * 40,
         y: col * 40,
-        occupied: false
+				shortestPathNumber: -1
       });
     }
   }
-	for (var i=0; i<entrancesOrExitsFirstRound.length; i++){ //Stops player from placing towers in entrances or exits on first round
-		var a = ((entrancesOrExitsFirstRound[i][0]-400)/40)
-		var b = ((entrancesOrExitsFirstRound[i][1])/40)
-		grid[a][b].occupied=true;
+	for (var i=0; i<entrancesFirstRound.length; i++){ //Stops player from placing towers in entrances or exits on first round
+		var a = ((entrancesFirstRound[i].x-400)/40)
+		var b = ((entrancesFirstRound[i].y)/40)
+		grid[a][b].shortestPathNumber=1000;
+	}
+	for (var i=0; i<exitsFirstRound.length; i++){ //Stops player from placing towers in entrances or exits on first round
+		var a = ((exitsFirstRound[i].x-400)/40)
+		var b = ((exitsFirstRound[i].y)/40)
+		grid[a][b].shortestPathNumber=1000;
 	}
   document.addEventListener("click", click);
   buttonEventHandlers();
@@ -193,18 +200,18 @@ MyGame.main = (function(graphics) {
       level: 1,
       levelNext: 2,
       damage: 10,
-      damageNext: 15,
       range: 8,
+			rate: 10,
+			sellFor: 8,
+			upgradeCost: 5,
+			initialCost: 10,
+			damageNext: 15,
       rangeNext: 10,
-      rate: 10,
       rateNext: 15,
-      initialCost: 10,
-      upgradeCost: 5,
-      sellFor: 8,
       x: x,
       y: y
     });
-    grid[(x - 400) / 40][y / 40].occupied = true;
+    grid[(x - 400) / 40][y / 40].shortestPathNumber=1000;
   }
 
   function sellTower() {
@@ -237,6 +244,76 @@ MyGame.main = (function(graphics) {
 	    }
 		}
   }
+
+	// this function trusts the grid will be square
+	function makeShortestPath(grid, sentinel, endSpace) {
+	  for (var i = 0; i < grid.length; i++) {
+	    for (var j = 0; j < grid.length; j++) {
+	      if (grid[i][j].shortestPathNumber != sentinel) grid[i][j].shortestPathNumber = grid.length * grid.length;
+	    }
+	  }
+	  var frontier = [];
+	  for (var i = 0; i < endSpace.length; i++) {
+			if((endSpace[i].y%40)==0){
+				endSpace[i].y=endSpace[i].y/40;
+			}
+			if(((endSpace[i].x-400)%40)==0 && endSpace[i].x!=0){
+				endSpace[i].x=(endSpace[i].x-400)/40;
+			}
+	    grid[endSpace[i].y][endSpace[i].x].shortestPathNumber = 0;
+	    frontier.push(endSpace[i]);
+	  }
+	  while (frontier.length != 0) {
+	    var focus = frontier.shift();
+			if(((focus.x-400)%40)==0 && focus.x!=0){
+		    focus.x = Math.floor((focus.x - 400) / 40);
+			}
+			if((focus.y%40)==0){
+		    focus.y = Math.floor(focus.y / 40);
+			}
+	    //up
+	    if (focus.x != 0) {
+	      if (grid[focus.y][focus.x - 1].shortestPathNumber != sentinel && grid[focus.y][focus.x - 1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber + 1) {
+	        grid[focus.y][focus.x - 1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber + 1;
+	        frontier.push({
+	          y: Math.ceil(focus.y*40),
+	          x: Math.ceil(focus.x-1)*40+400
+	        });
+	      }
+	    }
+	    //down
+	    if (focus.x != grid.length - 1) {
+	      if (grid[focus.y][focus.x + 1].shortestPathNumber != sentinel && grid[focus.y][focus.x + 1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber + 1) {
+	        grid[focus.y][focus.x + 1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber + 1;
+	        frontier.push({
+	          y: Math.ceil(focus.y*40),
+	          x: Math.ceil(focus.x+1)*40+400
+	        });
+	      }
+	    }
+	    //left
+	    if (focus.y != 0) {
+	      if (grid[focus.y - 1][focus.x].shortestPathNumber != sentinel && grid[focus.y - 1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber + 1) {
+	        grid[focus.y - 1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber + 1;
+	        frontier.push({
+	          y: Math.ceil(focus.y-1)*40,
+	          x: Math.ceil(focus.x*40+400)
+	        });
+	      }
+	    }
+	    //right
+	    if (focus.y != grid.length - 1) {
+	      if (grid[focus.y + 1][focus.x].shortestPathNumber != sentinel && grid[focus.y + 1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber + 1) {
+	        grid[focus.y + 1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber + 1;
+	        frontier.push({
+	          y: Math.ceil(focus.y+1)*40,
+	          x: Math.ceil(focus.x*40+400)
+	        });
+	      }
+	    }
+	  }
+	  return grid;
+	}
 
   function renderBackground() {
     if (imgBackground.isReady) {
@@ -468,19 +545,38 @@ MyGame.main = (function(graphics) {
       ctx.arc(xx + 20, yy + 20, 10, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.fill();
-      grid[(xx - 400) / 40][yy / 40].occupied = true;
+      grid[(xx - 400) / 40][yy / 40].shortestPathNumber=1000;
     }
-    // ctx.fillStyle="blue";
-    // for (var i=0;i<grid.length;i++){
-    // 	for (var j=0;j<grid.length;j++){
-    // 		if(grid[i][j].occupied==true){
-    // 			ctx.beginPath();
-    // 			ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
-    // 			ctx.closePath();
-    // 			ctx.fill();
-    // 		}
-    // 	}
-    // }
+		ctx.fillStyle="gray"
+    for (var i=0;i<grid.length;i++){
+    	for (var j=0;j<grid.length;j++){
+    		if(grid[i][j].shortestPathNumber==1000){
+					ctx.fillStyle="blue";
+					ctx.beginPath();
+					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fill();
+					ctx.stroke();
+    		}
+				else if(grid[i][j].shortestPathNumber==225){
+					ctx.fillStyle="orange";
+					ctx.beginPath();
+					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fill();
+					ctx.stroke();
+				}
+				else{
+					ctx.fillStyle="rgb("+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*10+")";
+					ctx.beginPath();
+					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fill();
+					ctx.stroke();
+				}
+
+    	}
+    }
     ctx.strokeStyle = 'rgba(255, 255, 255, 0)';
     ctx.stroke();
     ctx.strokeStyle = 'black';
@@ -611,7 +707,7 @@ MyGame.main = (function(graphics) {
 			var a = ((mousePointerX-400)/40)
 			var b = (mousePointerY/40)
 			if(a>=0 && a<15 && b>=0 && b<15){
-				if (grid[a][b].occupied==true){
+				if (grid[a][b].shortestPathNumber==1000){
 					taken=true;
 				}
 			}
@@ -699,6 +795,10 @@ MyGame.main = (function(graphics) {
     if (keyCode === 40) { //down
     }
     if (keyCode === 13) { //enter
+			makeShortestPath(grid, 1000, exitsFirstRound);
+			for (var i=0; i<grid.length;i++){
+					console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
+			}
     }
     if (keyCode === 27) { //escape
     }
@@ -746,7 +846,6 @@ MyGame.main = (function(graphics) {
       drawGrid(context, canvas.width - 400, canvas.height, 40)
     }
     drawMenu();
-    drawDots();
     if (placingTower) {
       var show = document.getElementById("upgradeOrSellButtons");
       show.style.display = "none";
@@ -761,6 +860,7 @@ MyGame.main = (function(graphics) {
     for (var t = 0; t < towers.length; t++) {
       renderTowers(towers[t].x, towers[t].y, towers[t].type);
     }
+		drawDots();
     if (inOptionsMenu) {
       drawOptionsMenu();
     } else {
