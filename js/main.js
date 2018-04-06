@@ -162,8 +162,8 @@ MyGame.main = (function(graphics) {
   var inOptionsMenu = false;
   var showGrid = true;
   var showTowerCoverage = false;
-  var showKreepPath = false;
-  var muteSoundEffects = false;
+  var showShortestPathLeftToRight = false;
+  var showShortestPathUpToDown = false;
   var gridSize = 15;
   var menuSelectedTower = -1;
   var saveMenuSelectedTower = -1;
@@ -175,21 +175,22 @@ MyGame.main = (function(graphics) {
       grid[row].push({
         x: 400 + row * 40,
         y: col * 40,
-				shortestPathNumber: -1
+				shortestPathNumber: -1,
+				shortestPathNumberLeftToRight: -1
       });
     }
   }
-	for (var i=0; i<entrancesFirstRound.length; i++){ //Stops player from placing towers in entrances or exits on first round
+	for (var i=0; i<entrancesFirstRound.length; i++){ //Stops player from placing towers in entrances on first round
 		var a = ((entrancesFirstRound[i].x-400)/40)
 		var b = ((entrancesFirstRound[i].y)/40)
 		grid[a][b].shortestPathNumber=1000;
 	}
-	for (var i=0; i<exitsFirstRound.length; i++){ //Stops player from placing towers in entrances or exits on first round
+	for (var i=0; i<exitsFirstRound.length; i++){ //Stops player from placing towers in exits on first round
 		var a = ((exitsFirstRound[i].x-400)/40)
 		var b = ((exitsFirstRound[i].y)/40)
 		grid[a][b].shortestPathNumber=1000;
 	}
-  document.addEventListener("click", click);
+  document.addEventListener("click", click); //Lets program handle click events and button events
   buttonEventHandlers();
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,6 +218,9 @@ MyGame.main = (function(graphics) {
   function sellTower() {
     if (menuSelectedTower != -1) {
 			gold+=towers[menuSelectedTower].sellFor;
+			var a = (towers[menuSelectedTower].x-400)/40;
+			var b = (towers[menuSelectedTower].y)/40;
+			grid[a][b].shortestPathNumber=gridSize*gridSize;
       towers.splice(menuSelectedTower, 1);
       menuSelectedTower = -1;
     }
@@ -247,6 +251,7 @@ MyGame.main = (function(graphics) {
 
 	// this function trusts the grid will be square
 	function makeShortestPath(grid, sentinel, endSpace) {
+		console.log(grid)
 	  for (var i = 0; i < grid.length; i++) {
 	    for (var j = 0; j < grid.length; j++) {
 	      if (grid[i][j].shortestPathNumber != sentinel) grid[i][j].shortestPathNumber = grid.length * grid.length;
@@ -479,8 +484,8 @@ MyGame.main = (function(graphics) {
     ctx.font = "16px Arial";
     ctx.fillText("Show Grid", 50, 210);
     ctx.fillText("Show Tower Coverage", 50, 240);
-    ctx.fillText("Show Kreep Path", 50, 270);
-    ctx.fillText("Mute Sound Effects", 50, 300);
+    ctx.fillText("Show Shortest Path Left to Right", 50, 270);
+    ctx.fillText("Show Shortest Path Up to Down", 50, 300);
     ctx.font = "30px Arial";
     ctx.fillText("Controls", 150, 355);
     ctx.font = "16px Arial";
@@ -547,35 +552,67 @@ MyGame.main = (function(graphics) {
       ctx.fill();
       grid[(xx - 400) / 40][yy / 40].shortestPathNumber=1000;
     }
-		ctx.fillStyle="gray"
-    for (var i=0;i<grid.length;i++){
-    	for (var j=0;j<grid.length;j++){
-    		if(grid[i][j].shortestPathNumber==1000){
-					ctx.fillStyle="blue";
-					ctx.beginPath();
-					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
-					ctx.closePath();
-					ctx.fill();
-					ctx.stroke();
-    		}
-				else if(grid[i][j].shortestPathNumber==225){
-					ctx.fillStyle="orange";
-					ctx.beginPath();
-					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
-					ctx.closePath();
-					ctx.fill();
-					ctx.stroke();
-				}
-				else{
-					ctx.fillStyle="rgb("+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*10+")";
-					ctx.beginPath();
-					ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
-					ctx.closePath();
-					ctx.fill();
-					ctx.stroke();
-				}
-
-    	}
+		if(showShortestPathUpToDown){
+			ctx.fillStyle="gray"
+	    for (var i=0;i<grid.length;i++){
+	    	for (var j=0;j<grid.length;j++){
+	    		if(grid[i][j].shortestPathNumber==1000){
+						ctx.fillStyle="yellow";
+						ctx.beginPath();
+						ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+	    		}
+					else if(grid[i][j].shortestPathNumber==225){
+						ctx.fillStyle="orange";
+						ctx.beginPath();
+						ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+					}
+					else{
+						ctx.fillStyle="rgb("+grid[i][j].shortestPathNumber*3+","+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*20+")";
+						ctx.beginPath();
+						ctx.arc(400+i*40+5,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+					}
+	    	}
+			}
+    }
+		if(showShortestPathLeftToRight){
+			ctx.fillStyle="gray"
+	    for (var i=0;i<grid.length;i++){
+	    	for (var j=0;j<grid.length;j++){
+	    		if(grid[i][j].shortestPathNumber==1000){
+						ctx.fillStyle="yellow";
+						ctx.beginPath();
+						ctx.arc(400+i*40+25,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+	    		}
+					else if(grid[i][j].shortestPathNumber==225){
+						ctx.fillStyle="orange";
+						ctx.beginPath();
+						ctx.arc(400+i*40+25,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+					}
+					else{
+						ctx.fillStyle="rgb("+grid[i][j].shortestPathNumber*3+","+grid[i][j].shortestPathNumber*10+","+grid[i][j].shortestPathNumber*20+")";
+						ctx.beginPath();
+						ctx.arc(400+i*40+25,j*40+5,5,0,Math.PI*2,true);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+					}
+	    	}
+			}
     }
     ctx.strokeStyle = 'rgba(255, 255, 255, 0)';
     ctx.stroke();
@@ -607,15 +644,15 @@ MyGame.main = (function(graphics) {
     } else {
       showTowerCoverage = false;
     }
-    if (document.querySelector('#showKreepPathCheckBox').checked) {
-      showKreepPath = true;
+    if (document.querySelector('#showShortestPathLeftToRightCheckBox').checked) {
+      showShortestPathLeftToRight = true;
     } else {
-      showKreepPath = false;
+      showShortestPathLeftToRight = false;
     }
-    if (document.querySelector('#muteSoundEffectsCheckBox').checked) {
-      muteSoundEffects = true;
+    if (document.querySelector('#showShortestPathUpToDownCheckBox').checked) {
+      showShortestPathUpToDown = true;
     } else {
-      muteSoundEffects = false;
+      showShortestPathUpToDown = false;
     }
   }
 
