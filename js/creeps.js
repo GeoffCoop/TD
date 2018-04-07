@@ -26,8 +26,6 @@ class groundOne extends Creep {
     }
 }
 
-
-
 class groundTwo extends Creep {
     constructor(x,y,direction){
         this.hp = 75;
@@ -59,9 +57,9 @@ class air extends Creep {
         this.y = y;
         this.direction = direction;
     }
-}    
+}
 
-let jim = groundOne(1,1,'right');
+let jim = new groundOne(1,1,'right');
 jim.move(1000);
 console.log(jim);
 jim.direction = 'down';
