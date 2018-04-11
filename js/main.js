@@ -36,12 +36,12 @@ imgAirMissile.onload = function() {
 };
 imgAirMissile.src = './images/aMissile.jpg';
 
-let imgRobot = new Image();
-imgRobot.isReady = false;
-imgRobot.onload = function() {
+let imgPlane = new Image();
+imgPlane.isReady = false;
+imgPlane.onload = function() {
   this.isReady = true;
 };
-imgRobot.src = './images/plane.png';
+imgPlane.src = './images/plane.png';
 
 let MyGame = {};
 
@@ -156,6 +156,7 @@ MyGame.main = (function(graphics) {
   var ctx = graphics.context;
   var gold = 1000;
   var inputStage = [];
+	var tempKeyCode = 'X';
   var towerPlacingGlowX = -120;
   var towerPlacingGlowY = -120;
   var placingTower = false;
@@ -163,10 +164,49 @@ MyGame.main = (function(graphics) {
   var taken = false;
   var inOptionsMenu = false;
 	var firstRound = true;
-  var showGrid = true;
+	var readyForKeyboardShortcut = -1;
+	var upgradeKeyboardShortcut = 85;
+	var sellBuildingKeyboardShortcut = 83;
+	var nextLevelKeyboardShortcut = 71;
+  var showGrid = false;
   var showTowerCoverage = false;
   var showShortestPathLeftToRight = false;
   var showShortestPathUpToDown = false;
+	try{
+		showGrid = JSON.parse(localStorage.getItem("showGrid"));
+	}
+	catch(error) {
+	}
+	try{
+		showTowerCoverage = JSON.parse(localStorage.getItem("showTowerCoverage"));
+	}
+	catch(error) {
+	}
+	try{
+		upgradeKeyboardShortcut = JSON.parse(localStorage.getItem("upgrade"));
+	}
+	catch(error) {
+		upgradeKeyboardShortcut = 85;
+	}
+	try{
+		sellBuildingKeyboardShortcut = JSON.parse(localStorage.getItem("sellBuilding"));
+	}
+	catch(error) {
+		sellBuildingKeyboardShortcut = 83;
+	}
+	try{
+		nextLevelKeyboardShortcut = JSON.parse(localStorage.getItem("nextLevel"));
+	}
+	catch(error) {
+		nextLevelKeyboardShortcut = 71;
+	}
+	localStorage.setItem("showGrid", showGrid);
+	localStorage.setItem("showTowerCoverage", showTowerCoverage);
+	localStorage.setItem("upgrade", upgradeKeyboardShortcut);
+	localStorage.setItem("sellBuilding", sellBuildingKeyboardShortcut);
+	localStorage.setItem("nextLevel", nextLevelKeyboardShortcut);
+	document.getElementById("showGridCheckBox").checked = showGrid;
+	document.getElementById("showTowerCoverageCheckBox").checked = showTowerCoverage;
   var gridSize = 15;
 	var planeX = 0;
 	var planeY = 7;
@@ -235,6 +275,10 @@ MyGame.main = (function(graphics) {
     });
     grid[(x - 400) / 40][y / 40].shortestPathNumber=1000;
     grid[(x - 400) / 40][y / 40].shortestPathNumberLeftToRight=1000;
+		makeShortestPathLeftToRight(grid, 1000);
+		if(firstRound){
+			makeShortestPathUpToDown(grid, 1000);
+		}
   }
 
   function sellTower() {
@@ -249,6 +293,10 @@ MyGame.main = (function(graphics) {
     }
 		var show = document.getElementById("upgradeOrSellButtons");
 		show.style.display = "none";
+		makeShortestPathLeftToRight(grid, 1000);
+		if(firstRound){
+			makeShortestPathUpToDown(grid, 1000);
+		}
   }
 
  	function upgradeTower() {
@@ -543,9 +591,36 @@ MyGame.main = (function(graphics) {
     ctx.font = "30px Arial";
     ctx.fillText("Controls", 150, 355);
     ctx.font = "16px Arial";
-    ctx.fillText("U", 200, 410);
-    ctx.fillText("S", 200, 440);
-    ctx.fillText("G", 200, 470);
+		if(readyForKeyboardShortcut==1){
+			ctx.fillStyle="red";
+			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
+			ctx.stroke();
+			ctx.fillStyle="black"
+		}
+		else{
+			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
+			ctx.stroke();
+		}
+		if(readyForKeyboardShortcut==2){
+			ctx.fillStyle="red";
+	    ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
+			ctx.stroke();
+			ctx.fillStyle="black"
+		}
+		else{
+			ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
+			ctx.stroke();
+		}
+		if(readyForKeyboardShortcut==3){
+			ctx.fillStyle="red";
+			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
+			ctx.stroke();
+			ctx.fillStyle="black"
+		}
+		else{
+			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
+			ctx.stroke();
+		}
     ctx.stroke();
   }
 
@@ -607,8 +682,8 @@ MyGame.main = (function(graphics) {
 				planeY = y;
 			}
 		}
-		if (imgRobot.isReady) {
-			ctx.drawImage(imgRobot,
+		if (imgPlane.isReady) {
+			ctx.drawImage(imgPlane,
 				x*40+400, y*40, 40, 40);
 		}
 		ctx.stroke();
@@ -700,6 +775,23 @@ MyGame.main = (function(graphics) {
     ctx.strokeStyle = 'black';
   }
 
+	function getKeyShortcut(keyCode){
+    tempKeyCode = String.fromCharCode(keyCode);
+		if(readyForKeyboardShortcut==1){
+			upgradeKeyboardShortcut=keyCode;
+			localStorage.setItem("upgrade", upgradeKeyboardShortcut);
+		}
+		else if(readyForKeyboardShortcut==2){
+			sellBuildingKeyboardShortcut=keyCode;
+			localStorage.setItem("sellBuilding", sellBuildingKeyboardShortcut);
+		}
+		else if(readyForKeyboardShortcut==3){
+			nextLevelKeyboardShortcut=keyCode;
+			localStorage.setItem("nextLevel", nextLevelKeyboardShortcut);
+		}
+		readyForKeyboardShortcut = -1;
+	}
+
   function followMouse(x) {
     placingTower = true;
     towerType = x;
@@ -717,13 +809,17 @@ MyGame.main = (function(graphics) {
   function checkCheckBoxes() { //check to make sure check boxes haven't changed.
     if (document.querySelector('#showGridCheckBox').checked) {
       showGrid = true;
+			localStorage.setItem("showGrid", true);
     } else {
       showGrid = false;
+			localStorage.setItem("showGrid", false);
     }
     if (document.querySelector('#showTowerCoverageCheckBox').checked) {
       showTowerCoverage = true;
+			localStorage.setItem("showTowerCoverage", true);
     } else {
       showTowerCoverage = false;
+			localStorage.setItem("showTowerCoverage", false);
     }
     if (document.querySelector('#showShortestPathLeftToRightCheckBox').checked) {
       showShortestPathLeftToRight = true;
@@ -787,19 +883,19 @@ MyGame.main = (function(graphics) {
     var button8 = document.getElementById("upgradeKeyboardShortcut");
     if (button8.addEventListener) {
       button8.addEventListener('click', function() {
-
+				readyForKeyboardShortcut = 1;
       });
     }
     var button9 = document.getElementById("sellKeyboardShortcut");
     if (button9.addEventListener) {
       button9.addEventListener('click', function() {
-
+				readyForKeyboardShortcut = 2;
       });
     }
     var button10 = document.getElementById("playNextLevelKeyboardShortcut");
     if (button10.addEventListener) {
       button10.addEventListener('click', function() {
-
+				readyForKeyboardShortcut = 3;
       });
     }
     var button11 = document.getElementById("upgrade");
@@ -910,46 +1006,47 @@ MyGame.main = (function(graphics) {
     if (keyCode === 39) { //right
 			planeX+=1;
     }
-    if (keyCode === 37) { //left
+    else if (keyCode === 37) { //left
 			planeX-=1;
     }
-    if (keyCode === 38) { //up
+    else if (keyCode === 38) { //up
 			planeY-=1;
 		}
-    if (keyCode === 40) { //down
+    else if (keyCode === 40) { //down
 			planeY+=1;
     }
-    if (keyCode === 16) { //left shift
-			makeShortestPathLeftToRight(grid, 1000);
+    // else if (keyCode === 16) { //left shift
+    // }
+    // else if (keyCode === 13) { //enter
+		// 	// for (var i=0; i<grid.length;i++){
+		// 	// 		// console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
+		// 	// 		// console.log(grid[i][0].shortestPathNumberLeftToRight,grid[i][1].shortestPathNumberLeftToRight,grid[i][2].shortestPathNumberLeftToRight,grid[i][3].shortestPathNumberLeftToRight,grid[i][4].shortestPathNumberLeftToRight,grid[i][5].shortestPathNumberLeftToRight,grid[i][6].shortestPathNumberLeftToRight,grid[i][7].shortestPathNumberLeftToRight,grid[i][8].shortestPathNumberLeftToRight,grid[i][9].shortestPathNumberLeftToRight,grid[i][10].shortestPathNumberLeftToRight,grid[i][11].shortestPatshortestPathNumberLeftToRight,grid[i][12].shortestPathNumberLeftToRight,grid[i][13].shortestPathNumberLeftToRight,grid[i][14].shortestPathNumberLeftToRight)
+		// 	// }
+    // }
+    else if (keyCode === 27) { //escape
     }
-    if (keyCode === 13) { //enter
-			makeShortestPathUpToDown(grid, 1000);
-			for (var i=0; i<grid.length;i++){
-					// console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
-					// console.log(grid[i][0].shortestPathNumberLeftToRight,grid[i][1].shortestPathNumberLeftToRight,grid[i][2].shortestPathNumberLeftToRight,grid[i][3].shortestPathNumberLeftToRight,grid[i][4].shortestPathNumberLeftToRight,grid[i][5].shortestPathNumberLeftToRight,grid[i][6].shortestPathNumberLeftToRight,grid[i][7].shortestPathNumberLeftToRight,grid[i][8].shortestPathNumberLeftToRight,grid[i][9].shortestPathNumberLeftToRight,grid[i][10].shortestPathNumberLeftToRight,grid[i][11].shortestPatshortestPathNumberLeftToRight,grid[i][12].shortestPathNumberLeftToRight,grid[i][13].shortestPathNumberLeftToRight,grid[i][14].shortestPathNumberLeftToRight)
-			}
-    }
-    if (keyCode === 27) { //escape
-    }
-    if (keyCode === 85) { //U
+    else if (keyCode === upgradeKeyboardShortcut) { //U
       upgradeTower();
     }
-    if (keyCode === 83) { //S
+    else if (keyCode === sellBuildingKeyboardShortcut) { //S
       sellTower();
     }
-    if (keyCode === 71) { //G
+    else if (keyCode === nextLevelKeyboardShortcut) { //G
 
     }
-    if (keyCode === 68) { //D
+    else if (keyCode === 68) { //D
       followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
     }
-    if (keyCode === 79) { //O
+    else if (keyCode === 79) { //O
       if (inOptionsMenu) { //TODO - Remove this - This is just to help quickly draw mazes!
         inOptionsMenu = false;
       } else {
         inOptionsMenu = true;
       }
     }
+		else if(readyForKeyboardShortcut != -1){
+			getKeyShortcut(keyCode);
+		}
   }
 
   function processInput(elapsedTime) {
