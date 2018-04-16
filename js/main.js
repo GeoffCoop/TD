@@ -164,6 +164,8 @@ MyGame.main = (function(graphics) {
   var taken = false;
   var inOptionsMenu = false;
 	var firstRound = true;
+	var checkLastX=0;
+	var checkLastY=0;
 	var readyForKeyboardShortcut = -1;
 	var upgradeKeyboardShortcut = 85;
 	var sellBuildingKeyboardShortcut = 83;
@@ -368,7 +370,7 @@ MyGame.main = (function(graphics) {
 	            }
 	        }
 	    }
-	    return grid;
+	    // return grid;
 	}
 
 	// this function trusts the grid will be square
@@ -803,6 +805,13 @@ MyGame.main = (function(graphics) {
       });
       towerPlacingGlowX = e.pageX - 100;
       towerPlacingGlowY = e.pageY - 120 - 20;
+			var xxx = Math.floor((e.pageX-100)/40-10);
+			var yyy = Math.floor((e.pageY-120)/40)
+			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
+				console.log(xxx, yyy)
+			}
+			checkLastX=xxx;
+			checkLastY=yyy;
     });
   }
 
@@ -1044,6 +1053,10 @@ MyGame.main = (function(graphics) {
         inOptionsMenu = true;
       }
     }
+		else if (keyCode === 82) { //R
+			planeX=0;
+			planeY=7;
+		}
 		else if(readyForKeyboardShortcut != -1){
 			getKeyShortcut(keyCode);
 		}
