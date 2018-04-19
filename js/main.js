@@ -668,19 +668,19 @@ MyGame.main = (function(graphics) {
 	function drawCreeps(x,y, elapsedTime){
 		if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
 			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				x+=1*Math.ceil(elapsedTime/1000);
+				x+=1;
 				planeX=x;
 			}
 			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				x-=1*Math.ceil(elapsedTime/1000);
+				x-=1;
 				planeX=x;
 			}
 			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				y+=1*Math.ceil(elapsedTime/1000);
+				y+=1;
 				planeY = y;
 			}
 			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				y-=1*Math.ceil(elapsedTime/1000);
+				y-=1;
 				planeY = y;
 			}
 		}
