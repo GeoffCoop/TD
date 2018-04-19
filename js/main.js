@@ -210,11 +210,10 @@ MyGame.main = (function(graphics) {
 	document.getElementById("showGridCheckBox").checked = showGrid;
 	document.getElementById("showTowerCoverageCheckBox").checked = showTowerCoverage;
   var gridSize = 15;
-	var planeX = 0;
-	var planeY = 7;
   var menuSelectedTower = -1;
   var saveMenuSelectedTower = -1;
   var towers = [];
+  var creeps = [];
   var grid = []
   for (let row = 0; row < gridSize; row++) {
     grid.push([]);
@@ -321,6 +320,27 @@ MyGame.main = (function(graphics) {
 	    }
 		}
   }
+
+  function makeCreep(x,y,type){
+    creeps.push({
+      type: type,
+      hitpoints: 5,
+  		speed: .5,
+      direction: 'right',
+  		gridX: x, //between 0 and 14
+  		gridY: y,
+      animationX: 0, //between 0 and 40, changes based on speed
+      animationY: 0,
+      relativeX: Math.random()*20, //start somewhere different within cell, 20 because the size of the grid's cell is 40, minus 20, the size of the creep's image
+      relativeY: Math.random()*20
+    });
+  }
+  makeCreep(0,6,0);
+  makeCreep(0,6,0);
+  makeCreep(0,7,0);
+  makeCreep(0,7,0);
+  makeCreep(0,8,0);
+  makeCreep(0,8,0);
 
 	// this function trusts the grid will be square
 	function makeShortestPathLeftToRight(grid, sentinel) {
@@ -665,28 +685,70 @@ MyGame.main = (function(graphics) {
     }
   }
 
-	function drawCreeps(x,y, elapsedTime){
-		if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
+  function getNextCreepDirection(c){
+    var x = creeps[c].gridX;
+    var y = creeps[c].gridY;
+    if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
 			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				x+=1;
-				planeX=x;
+				creeps[c].direction='right';
 			}
 			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				x-=1;
-				planeX=x;
+				creeps[c].direction='left';
 			}
 			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				y+=1;
-				planeY = y;
+				creeps[c].direction='down';
 			}
 			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				y-=1;
-				planeY = y;
+				creeps[c].direction='up';
 			}
 		}
+  }
+
+	function drawCreeps(c){
+    if(creeps[c].direction=='right'){
+      if(creeps[c].animationX<40){
+        creeps[c].animationX+=creeps[c].speed;
+      }
+      else{
+        creeps[c].animationX=0;
+        creeps[c].gridX+=1;
+        getNextCreepDirection(c);
+      }
+    }
+    else if(creeps[c].direction=='left'){
+      if(creeps[c].animationX>-40){
+        creeps[c].animationX-=creeps[c].speed;
+      }
+      else{
+        creeps[c].animationX=0;
+        creeps[c].gridX-=1;
+        getNextCreepDirection(c);
+      }
+    }
+    else if(creeps[c].direction=='down'){
+      if(creeps[c].animationY<40){
+        creeps[c].animationY+=creeps[c].speed;
+      }
+      else{
+        creeps[c].animationY=0;
+        creeps[c].gridY+=1;
+        getNextCreepDirection(c);
+      }
+    }
+    else if(creeps[c].direction=='up'){
+      if(creeps[c].animationY>-40){
+        creeps[c].animationY-=creeps[c].speed;
+      }
+      else{
+        creeps[c].animationY=0;
+        creeps[c].gridY-=1;
+        getNextCreepDirection(c);
+      }
+    }
 		if (imgPlane.isReady) {
-			ctx.drawImage(imgPlane,
-				x*40+400, y*40, 40, 40);
+      var drawX = creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+      var drawY = creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+			ctx.drawImage(imgPlane, drawX, drawY, 20, 20);
 		}
 		ctx.stroke();
 	}
@@ -1013,16 +1075,16 @@ MyGame.main = (function(graphics) {
 
   function handleInputs(keyCode, elapsedTime) {
     if (keyCode === 39) { //right
-			planeX+=1;
+			creeps[0].gridX+=1;
     }
     else if (keyCode === 37) { //left
-			planeX-=1;
+			creeps[0].gridX-=1;
     }
     else if (keyCode === 38) { //up
-			planeY-=1;
+			creeps[0].gridY-=1;
 		}
     else if (keyCode === 40) { //down
-			planeY+=1;
+			creeps[0].gridY+=1;
     }
     // else if (keyCode === 16) { //left shift
     // }
@@ -1054,8 +1116,8 @@ MyGame.main = (function(graphics) {
       }
     }
 		else if (keyCode === 82) { //R
-			planeX=0;
-			planeY=7;
+			creeps[0].gridX=0;
+			creeps[0].gridY=7;
 		}
 		else if(readyForKeyboardShortcut != -1){
 			getKeyShortcut(keyCode);
@@ -1108,7 +1170,9 @@ MyGame.main = (function(graphics) {
       var show = document.getElementById("optionsMenu");
       show.style.display = "none";
     }
-		drawCreeps(planeX, planeY, elapsedTime);
+    for (var c = 0; c < creeps.length; c++) {
+      drawCreeps(c);
+    }
     ctx.stroke();
   }
   window.addEventListener('keydown', function(event) {
@@ -1119,7 +1183,7 @@ MyGame.main = (function(graphics) {
     let elapsedTime = (time - lastTimeStamp);
     update(elapsedTime);
     lastTimeStamp = time;
-    render(elapsedTime);
+    render(time);
     requestAnimationFrame(gameLoop);
   };
 
