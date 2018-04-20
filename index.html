@@ -10,8 +10,8 @@
         <canvas id = "canvas-main" width = "1000" height = "600" style="border:1px solid #000000;"></canvas>
       </div>
       <div id="goldAndHealth">
-        <img src="./images/Gold.png" style="width: 50px; height: 50px; position:absolute; left: 80px; top: 145px;"/>
-        <img src="./images/heart.png" style="width: 50px; height: 50px; position:absolute; left: 250px; top: 147px;"/>
+        <img src="./images/Gold.png" style="width: 40px; height: 40px; position:absolute; left: 75px; top: 150px;"/>
+        <img src="./images/heart.png" style="width: 40px; height: 40px; position:absolute; left: 190px; top: 153px;"/>
       </div>
       <div id="towers">
         <button id="groundProjectile" style="position:absolute; left: 90px;top: 210px; background-image:url('./images/gProjectile.jpg'); width:50px; height: 50px; background-size: 100%;"/>
@@ -37,11 +37,28 @@
         <button type="button" id="upgradeKeyboardShortcut" style="position:absolute; left: 80px; top: 464px; width: 150px; height: 20px;">Upgrade Key</button>
         <button type="button" id="sellKeyboardShortcut" style="position: absolute; left: 80px; top: 494px; width: 150px; height: 20px;">Sell Building Key</button>
         <button type="button" id="playNextLevelKeyboardShortcut" style="position: absolute; left: 80px; top: 524px; width: 150px; height: 20px;">Play Next Level Key</button>
+        <button type="button" id="closeOptionsMenu" style="position: absolute; left: 70px; top: 200px; width: 40px; height: 40px;">X</button>
+      </div>
+
+      <div id="mainMenu">
+        <button type="button" id="newGame" style="position:absolute; left: 150px; top: 275px; width: 200px; height: 50px;">New Game</button>
+        <button type="button" id="options2" style="position: absolute; left: 150px; top: 348px; width: 200px; height: 50px;">Options</button>
+        <button type="button" id="highScores" style="position: absolute; left: 150px; top: 424px; width: 200px; height: 50px;">High Scores</button>
+        <button type="button" id="credits" style="position: absolute; left: 150px; top: 499px; width: 200px; height: 50px;">Credits</button>
+        <button type="button" id="closeMainMenu" style="position: absolute; left: 70px; top: 200px; width: 40px; height: 40px;">X</button>
+      </div>
+
+      <div id="highScoresMenu">
+        <button type="button" id="closeHighScoresMenu" style="position: absolute; left: 70px; top: 200px; width: 40px; height: 40px;">X</button>
+      </div>
+      
+      <div id="creditsMenu">
+        <button type="button" id="closeCreditsMenu" style="position: absolute; left: 70px; top: 200px; width: 40px; height: 40px;">X</button>
       </div>
 
       <div id="optionsQuitNextLevel">
         <button type="button" id="options" style="position:absolute; left: 75px;top: 600px; width: 100px; height: 50px;">Options</button>
-        <button type="button" id="quit" style="position:absolute; left: 200px;top: 600px; width: 100px; height: 50px;">Quit</button>
+        <button type="button" id="inMainMenuButton" style="position:absolute; left: 200px;top: 600px; width: 100px; height: 50px;">Main Menu</button>
         <button type="button" id="playNextLevel" style="position:absolute; left: 325px;top: 600px; width: 100px; height: 50px;">Next Level</button>
       </div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

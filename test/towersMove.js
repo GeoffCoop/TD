@@ -2,7 +2,7 @@ let canvas = document.getElementById("canvas-main");
 let context = canvas.getContext('2d');
 
 var tower = new Image();
-tower.src = './gbomb.jpg';
+tower.src = '../images/plane.png';
 towerSize = 50;
 angleAccuracy = .025;
 
@@ -40,7 +40,7 @@ var br = new Tower(450,450);
 
 function render(){
     context.clear();
-    
+
     // context.save();
     // context.translate(125,125);
     // context.rotate(angle*5);
@@ -58,7 +58,7 @@ function render(){
     // rotateImage(tower, 450, 150, 50, -angle*3);
     // rotateImage(tower, 150, 450, 50, angle*4);
     // rotateImage(tower, 450, 450, 50, -angle*2);
-    
+
 }
 
 //for square images desired at size
@@ -90,9 +90,9 @@ function rotateTower(tower, angle){
 
 
 function rotateToSource(tower, x, y){
-    
+
     if (Math.abs(tower.angle - (x < tower.x ? Math.atan((tower.y-y)/(tower.x-x))+Math.PI : Math.atan((tower.y-y)/(tower.x-x))))%(2*Math.PI) > angleAccuracy) {
-        
+
         if(tower == tl){console.log(Math.atan((tower.y-y)/(tower.x-x)) - tower.angle )}
 
         if (x < tower.x){
@@ -130,5 +130,3 @@ function gameLoop(time){
 }
 
 gameLoop(lastTimeStamp);
-
-

@@ -6,7 +6,7 @@ imgBackground.isReady = false;
 imgBackground.onload = function() {
   this.isReady = true;
 };
-imgBackground.src = './images/grassBackground.jpg';
+imgBackground.src = './images/brushed.jpg';
 
 let imgGroundProjectile = new Image();
 imgGroundProjectile.isReady = false;
@@ -154,7 +154,9 @@ MyGame.main = (function(graphics) {
   var canvas = document.getElementById('canvas-main');
   var context = canvas.getContext('2d');
   var ctx = graphics.context;
-  var gold = 1000;
+  var gold = 500;
+  var hearts = 10;
+  var score = 0;
   var inputStage = [];
 	var tempKeyCode = 'X';
   var towerPlacingGlowX = -120;
@@ -162,7 +164,10 @@ MyGame.main = (function(graphics) {
   var placingTower = false;
   var towerType = 0;
   var taken = false;
+  var inMainMenu = false;
   var inOptionsMenu = false;
+  var inHighScoresMenu = false;
+  var inCreditsMenu = false;
 	var firstRound = true;
 	var checkLastX=0;
 	var checkLastY=0;
@@ -257,6 +262,22 @@ MyGame.main = (function(graphics) {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  function newGame(){
+    for (var t=0; t<towers.length; t++){
+      var a = (towers[t].x-400)/40;
+			var b = (towers[t].y)/40;
+      grid[a][b].shortestPathNumber=gridSize*gridSize;
+			grid[a][b].shortestPathNumberLeftToRight=gridSize*gridSize;
+    }
+    towers.length = 0;
+    creeps.length = 0;
+    gold=1000;
+    hearts = 10;
+    score = 0;
+    makeShortestPathUpToDown(grid,1000);
+    makeShortestPathLeftToRight(grid,1000);
+  }
+
   function makeTower(x, y, type) {
     towers.push({
       type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
@@ -325,7 +346,7 @@ MyGame.main = (function(graphics) {
     creeps.push({
       type: type,
       hitpoints: 5,
-  		speed: .5,
+  		speed: 1,
       direction: 'right',
   		gridX: x, //between 0 and 14
   		gridY: y,
@@ -335,12 +356,6 @@ MyGame.main = (function(graphics) {
       relativeY: Math.random()*20
     });
   }
-  makeCreep(0,6,0);
-  makeCreep(0,6,0);
-  makeCreep(0,7,0);
-  makeCreep(0,7,0);
-  makeCreep(0,8,0);
-  makeCreep(0,8,0);
 
 	// this function trusts the grid will be square
 	function makeShortestPathLeftToRight(grid, sentinel) {
@@ -452,6 +467,7 @@ MyGame.main = (function(graphics) {
   }
 
   function drawGrid(ctx, w, h, step) {
+    ctx.strokeStyle="#3D8D7D"
     ctx.beginPath();
     for (var x = 400; x <= w + 400; x += step) {
       ctx.moveTo(x, 0);
@@ -466,11 +482,12 @@ MyGame.main = (function(graphics) {
     }
     ctx.lineWidth = 1;
     ctx.stroke();
+    // ctx.strokeStyle="black"
   }
 
   function drawMenu() {
     ctx.globalAlpha = 0.5;
-    ctx.fillStyle = "gray";
+    ctx.fillStyle = "#1F5592";
     var menuRectX = 0;
     var menuRectY = 0;
     var menuRectWidth = 400;
@@ -483,10 +500,11 @@ MyGame.main = (function(graphics) {
     ctx.lineWidth = 3;
     ctx.moveTo(0, 75);
     ctx.lineTo(400, 75);
-    ctx.font = "30px Arial";
+    ctx.font = "25px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText(gold, 90, 112);
-    ctx.fillText("10", 260, 112);
+    ctx.fillText(gold, 70, 110);
+    ctx.fillText(hearts, 180, 110);
+    ctx.fillText("Score: "+score, 250, 110);
     ctx.moveTo(0, 125);
     ctx.lineTo(400, 125);
     ctx.moveTo(0, 205);
@@ -502,7 +520,7 @@ MyGame.main = (function(graphics) {
       ctx.closePath();
       ctx.fill();
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "gray";
+      ctx.fillStyle = "#0D2F5B";
       ctx.fillRect(30, 220, 330, 280);
       ctx.moveTo(30, 222);
       ctx.lineTo(360, 220);
@@ -513,7 +531,7 @@ MyGame.main = (function(graphics) {
       ctx.moveTo(30, 500);
       ctx.lineTo(30, 222);
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "white";
       ctx.lineWidth = 2;
       ctx.moveTo(30, 260);
       ctx.lineTo(360, 260);
@@ -586,16 +604,37 @@ MyGame.main = (function(graphics) {
     ctx.stroke();
   }
 
-  function drawOptionsMenu() {
+  function drawMainMenu() {
+    inOptionsMenu = false;
+    inMainMenu = true;
     var show = document.getElementById("towers");
     show.style.display = "none";
-    var show = document.getElementById("optionsMenu");
-    show.style.display = "block";
-    ctx.fillStyle = "gray";
+    var show2 = document.getElementById("mainMenu");
+    show2.style.display = "block";
+    ctx.fillStyle = "#0D2F5B";
     ctx.globalAlpha = .9;
     ctx.fillRect(0, 125, 400, 385)
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "black"
+    ctx.fillStyle = "white"
+    ctx.lineWidth = 1;
+    ctx.moveTo(0, 180);
+    ctx.lineTo(400, 180);
+    ctx.fillText("Main Menu", 140, 162);
+    ctx.stroke();
+  }
+
+  function drawOptionsMenu() {
+    inMainMenu = false;
+    inOptionsMenu = true;
+    var show = document.getElementById("towers");
+    show.style.display = "none";
+    var show2 = document.getElementById("optionsMenu");
+    show2.style.display = "block";
+    ctx.fillStyle = "#0D2F5B";
+    ctx.globalAlpha = .9;
+    ctx.fillRect(0, 125, 400, 385)
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white"
     ctx.lineWidth = 1;
     ctx.moveTo(0, 180);
     ctx.lineTo(400, 180);
@@ -617,7 +656,7 @@ MyGame.main = (function(graphics) {
 			ctx.fillStyle="red";
 			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
 			ctx.stroke();
-			ctx.fillStyle="black"
+			ctx.fillStyle="white"
 		}
 		else{
 			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
@@ -627,7 +666,7 @@ MyGame.main = (function(graphics) {
 			ctx.fillStyle="red";
 	    ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
 			ctx.stroke();
-			ctx.fillStyle="black"
+			ctx.fillStyle="white"
 		}
 		else{
 			ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
@@ -637,12 +676,82 @@ MyGame.main = (function(graphics) {
 			ctx.fillStyle="red";
 			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
 			ctx.stroke();
-			ctx.fillStyle="black"
+			ctx.fillStyle="white"
 		}
 		else{
 			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
 			ctx.stroke();
 		}
+    ctx.stroke();
+  }
+
+  function drawHighScoresMenu(){
+    inMainMenu = false;
+    inOptionsMenu = false;
+    inCreditsMenu = false;
+    inHighScoresMenu = true;
+    var show = document.getElementById("towers");
+    show.style.display = "none";
+    var show2 = document.getElementById("optionsMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("mainMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("creditsMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("highScoresMenu");
+    show2.style.display = "block";
+    ctx.fillStyle = "#0D2F5B";
+    ctx.globalAlpha = .9;
+    ctx.fillRect(0, 125, 400, 385)
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white"
+    ctx.lineWidth = 1;
+    ctx.moveTo(0, 180);
+    ctx.lineTo(400, 180);
+    ctx.font = "30px Arial";
+    ctx.fillText("High Scores", 120, 162);
+    ctx.font = "24px Arial";
+    var storedHSNames = [];
+		var storedHsScores = [];
+		if(localStorage.getItem("highscore") !== null){
+			storedHSNames = JSON.parse(localStorage.getItem("highscore"));
+			storedHsScores = JSON.parse(localStorage.getItem("score"));
+		}
+		for (var hs=0;hs<storedHSNames.length;hs++){
+			graphics.context.fillText(storedHsScores[hs]+" - "+storedHSNames[hs],50,220+30*hs);
+		}
+    ctx.stroke();
+  }
+  function drawCreditsMenu(){
+    inMainMenu = false;
+    inOptionsMenu = false;
+    inHighScoresMenu = false;
+    inCreditsMenu = true;
+    var show = document.getElementById("towers");
+    show.style.display = "none";
+    var show2 = document.getElementById("optionsMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("mainMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("highScoresMenu");
+    show2.style.display = "none";
+    var show2 = document.getElementById("creditsMenu");
+    show2.style.display = "block";
+    ctx.fillStyle = "#0D2F5B";
+    ctx.globalAlpha = .9;
+    ctx.fillRect(0, 125, 400, 385)
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white"
+    ctx.lineWidth = 1;
+    ctx.moveTo(0, 180);
+    ctx.lineTo(400, 180);
+    ctx.font = "30px Arial";
+    ctx.fillText("Credits", 150, 162);
+    ctx.font = "20px Arial";
+    ctx.fillText("This game was created by Matt Ward", 20, 240);
+    ctx.fillText("and Kyle Cooper as a project for our", 20, 270);
+    ctx.fillText("CS 5410 Game Development class", 20, 300);
+    ctx.fillText("taught by Professor Dean Mathias.", 20, 330);
     ctx.stroke();
   }
 
@@ -748,13 +857,35 @@ MyGame.main = (function(graphics) {
 		if (imgPlane.isReady) {
       var drawX = creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
       var drawY = creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-			ctx.drawImage(imgPlane, drawX, drawY, 20, 20);
+      if(creeps[c].gridX==14 && (creeps[c].gridY==6 || creeps[c].gridY==7 || creeps[c].gridY==8)){
+        hearts-=1;
+        creeps.splice(c, 1);
+      }
+      if(hearts<1){
+        console.log('you lose');
+      }
+      if(drawX>400){
+        var angle=0;
+        try{
+          if(creeps[c].direction=='right'){angle=0;}
+          if(creeps[c].direction=='up'){angle=Math.PI*3/2;}
+          if(creeps[c].direction=='left'){angle=Math.PI;}
+          if(creeps[c].direction=='down'){angle=Math.PI/2;}
+        } catch(error){
+          // console.error(error);
+        }
+        ctx.save();
+        ctx.translate(drawX+10, drawY+10);
+        ctx.rotate(angle);
+  			ctx.drawImage(imgPlane, -10, -10, 20, 20);
+        ctx.restore();
+      }
 		}
 		ctx.stroke();
 	}
 
   function drawDots() { //Draw edge dots, temporarily to represent edges.
-    ctx.globalAlpha = 0.75;
+    ctx.globalAlpha = 0.5;
     ctx.fillStyle = "white";
     ctx.beginPath();
     ctx.arc(towerPlacingGlowX + 20, towerPlacingGlowY + 20, 120, 0, Math.PI * 2, true);
@@ -762,18 +893,18 @@ MyGame.main = (function(graphics) {
     ctx.fill();
     ctx.globalAlpha = 1;
     for (var x = 0; x < edgeArr.length; x += 2) {
-      ctx.fillStyle = "red";
+      ctx.globalAlpha = .4;
+      ctx.fillStyle = "#7DFBFD";
       ctx.beginPath();
       var xx = edgeArr[x];
       var yy = edgeArr[x + 1];
-      ctx.arc(xx + 20, yy + 20, 10, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fill();
+      ctx.fillRect(xx+1,yy+1,38,38);
       grid[(xx - 400) / 40][yy / 40].shortestPathNumber=1000;
       grid[(xx - 400) / 40][yy / 40].shortestPathNumberLeftToRight=1000;
     }
+    ctx.globalAlpha = 1;
 		if(showShortestPathUpToDown){
-			ctx.fillStyle="gray"
+			ctx.fillStyle="#0D2F5B"
 	    for (var i=0;i<grid.length;i++){
 	    	for (var j=0;j<grid.length;j++){
 	    		if(grid[i][j].shortestPathNumber==1000){
@@ -804,7 +935,7 @@ MyGame.main = (function(graphics) {
 			}
     }
 		if(showShortestPathLeftToRight){
-			ctx.fillStyle="gray"
+			ctx.fillStyle="#0D2F5B"
 	    for (var i=0;i<grid.length;i++){
 	    	for (var j=0;j<grid.length;j++){
 	    		if(grid[i][j].shortestPathNumberLeftToRight==1000){
@@ -839,6 +970,13 @@ MyGame.main = (function(graphics) {
     ctx.strokeStyle = 'black';
   }
 
+  function startLevel(numCreeps){
+    for (var i=0; i<numCreeps; i++){
+        var y = Math.round(Math.random()*2+6);
+        makeCreep(-i,y,0)
+      }
+  }
+
 	function getKeyShortcut(keyCode){
     tempKeyCode = String.fromCharCode(keyCode);
 		if(readyForKeyboardShortcut==1){
@@ -870,7 +1008,7 @@ MyGame.main = (function(graphics) {
 			var xxx = Math.floor((e.pageX-100)/40-10);
 			var yyy = Math.floor((e.pageY-120)/40)
 			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
-				console.log(xxx, yyy)
+				// console.log(xxx, yyy) //use to see when mouse changes grid's x and y positions
 			}
 			checkLastX=xxx;
 			checkLastY=yyy;
@@ -932,23 +1070,30 @@ MyGame.main = (function(graphics) {
     var button5 = document.getElementById("options");
     if (button5.addEventListener) {
       button5.addEventListener('mouseup', function() {
-        if (inOptionsMenu) {
+        if (inOptionsMenu && !inMainMenu) {
           inOptionsMenu = false;
         } else {
+          var show2 = document.getElementById("mainMenu");
+          show2.style.display = "none";
           inOptionsMenu = true;
         }
       });
     }
-    var button6 = document.getElementById("quit");
+    var button6 = document.getElementById("inMainMenuButton");
     if (button6.addEventListener) {
       button6.addEventListener('click', function() {
-
+        if(inMainMenu && !inOptionsMenu){
+          inMainMenu = false;
+        }
+        else{
+          inMainMenu = true;
+        }
       });
     }
     var button7 = document.getElementById("playNextLevel");
     if (button7.addEventListener) {
       button7.addEventListener('click', function() {
-
+        startLevel(10);
       });
     }
     var button8 = document.getElementById("upgradeKeyboardShortcut");
@@ -981,6 +1126,57 @@ MyGame.main = (function(graphics) {
         sellTower();
       });
     }
+    var button13 = document.getElementById("newGame");
+    if (button13.addEventListener) {
+      button13.addEventListener('click', function() {
+        newGame();
+      });
+    }
+    var button14 = document.getElementById("options2");
+    if (button14.addEventListener) {
+      button14.addEventListener('click', function() {
+        var show2 = document.getElementById("mainMenu");
+        show2.style.display = "none";
+        inMainMenu = false;
+        inOptionsMenu = true;
+      });
+    }
+    var button15 = document.getElementById("highScores");
+    if (button15.addEventListener) {
+      button15.addEventListener('click', function() {
+        inHighScoresMenu = true;
+      });
+    }
+    var button16 = document.getElementById("credits");
+    if (button16.addEventListener) {
+      button16.addEventListener('click', function() {
+        inCreditsMenu = true;
+      });
+    }
+    var button17 = document.getElementById("closeMainMenu");
+    if (button17.addEventListener) {
+      button17.addEventListener('click', function() {
+        inMainMenu = false;
+      });
+    }
+    var button18 = document.getElementById("closeOptionsMenu");
+    if (button18.addEventListener) {
+      button18.addEventListener('click', function() {
+        inOptionsMenu = false;
+      });
+    }
+    var button19 = document.getElementById("closeHighScoresMenu");
+    if (button19.addEventListener) {
+      button19.addEventListener('click', function() {
+        inHighScoresMenu = false;
+      });
+    }
+    var button20 = document.getElementById("closeCreditsMenu");
+    if (button20.addEventListener) {
+      button20.addEventListener('click', function() {
+        inCreditsMenu = false;
+      });
+    }
   }
 
   function click(event) { //handles only click events that don't get taken care of by the button event handler.
@@ -1005,7 +1201,13 @@ MyGame.main = (function(graphics) {
           gold -= towers[towers.length - 1].initialCost;
           if (gold < 0) {
             gold += towers[towers.length - 1].initialCost;
+            var a = (towers[towers.length-1].x-400)/40;
+      			var b = (towers[towers.length-1].y)/40;
+            grid[a][b].shortestPathNumber=gridSize*gridSize;
+      			grid[a][b].shortestPathNumberLeftToRight=gridSize*gridSize;
             towers.splice(towers.length - 1, 1);
+            makeShortestPathLeftToRight(grid,1000);
+            makeShortestPathUpToDown(grid,1000);
           }
           towerPlacingGlowX = -120;
           towerPlacingGlowY = -120;
@@ -1103,7 +1305,7 @@ MyGame.main = (function(graphics) {
       sellTower();
     }
     else if (keyCode === nextLevelKeyboardShortcut) { //G
-
+      startLevel(10);
     }
     else if (keyCode === 68) { //D
       followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
@@ -1147,11 +1349,12 @@ MyGame.main = (function(graphics) {
       drawGrid(context, canvas.width - 400, canvas.height, 40)
     }
     drawMenu();
+    ctx.strokeStyle="black"
     if (placingTower) {
       var show = document.getElementById("upgradeOrSellButtons");
       show.style.display = "none";
       ctx.fillStyle = "red";
-      ctx.globalAlpha = .3;
+      ctx.globalAlpha = .5;
       ctx.fillRect(0, 205, 400, 305)
       ctx.globalAlpha = 1;
     }
@@ -1164,11 +1367,33 @@ MyGame.main = (function(graphics) {
 		drawDots();
     if (inOptionsMenu) {
       drawOptionsMenu();
-    } else {
+    } else if(!inMainMenu){
       var show = document.getElementById("towers");
       show.style.display = "block";
       var show = document.getElementById("optionsMenu");
       show.style.display = "none";
+    }
+    if (inMainMenu) {
+      drawMainMenu();
+    } else {
+      var show = document.getElementById("mainMenu");
+      show.style.display = "none";
+    }
+    if (inHighScoresMenu) {
+      drawHighScoresMenu();
+    } else {
+      var show = document.getElementById("highScoresMenu");
+      show.style.display = "none";
+    }
+    if (inCreditsMenu) {
+      drawCreditsMenu();
+    } else {
+      var show = document.getElementById("creditsMenu");
+      show.style.display = "none";
+    }
+    if(!inOptionsMenu && !inMainMenu && !inHighScoresMenu && !inCreditsMenu){
+      var show = document.getElementById("towers");
+      show.style.display = "block";
     }
     for (var c = 0; c < creeps.length; c++) {
       drawCreeps(c);
