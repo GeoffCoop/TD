@@ -44,6 +44,11 @@ imgPlane.onload = function() {
 imgPlane.src = './images/plane.png';
 
 let MyGame = {};
+var score = 0;
+var inHighScoresMenu = false;
+var youLost = false;
+var drawInputHSBox = false;
+
 
 MyGame.graphics = (function() {
   'use strict';
@@ -156,7 +161,6 @@ MyGame.main = (function(graphics) {
   var ctx = graphics.context;
   var gold = 500;
   var hearts = 10;
-  var score = 0;
   var inputStage = [];
 	var tempKeyCode = 'X';
   var towerPlacingGlowX = -120;
@@ -166,7 +170,6 @@ MyGame.main = (function(graphics) {
   var taken = false;
   var inMainMenu = false;
   var inOptionsMenu = false;
-  var inHighScoresMenu = false;
   var inCreditsMenu = false;
 	var firstRound = true;
 	var checkLastX=0;
@@ -263,6 +266,11 @@ MyGame.main = (function(graphics) {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function newGame(){
+    inHighScoresMenu=false;
+    inOptionsMenu=false;
+    inCreditsMenu=false;
+    inMainMenu=false;
+    drawInputHSBox=false;
     for (var t=0; t<towers.length; t++){
       var a = (towers[t].x-400)/40;
 			var b = (towers[t].y)/40;
@@ -274,6 +282,7 @@ MyGame.main = (function(graphics) {
     gold=1000;
     hearts = 10;
     score = 0;
+    youLost = false;
     makeShortestPathUpToDown(grid,1000);
     makeShortestPathLeftToRight(grid,1000);
   }
@@ -301,6 +310,18 @@ MyGame.main = (function(graphics) {
 		if(firstRound){
 			makeShortestPathUpToDown(grid, 1000);
 		}
+    if(type==1){
+      score+=20;
+    }
+    if(type==2){
+      score+=30;
+    }
+    if(type==3){
+      score+=20;
+    }
+    if(type==4){
+      score+=30;
+    }
   }
 
   function sellTower() {
@@ -346,7 +367,7 @@ MyGame.main = (function(graphics) {
     creeps.push({
       type: type,
       hitpoints: 5,
-  		speed: 1,
+  		speed: 3,
       direction: 'right',
   		gridX: x, //between 0 and 14
   		gridY: y,
@@ -722,6 +743,7 @@ MyGame.main = (function(graphics) {
 		}
     ctx.stroke();
   }
+
   function drawCreditsMenu(){
     inMainMenu = false;
     inOptionsMenu = false;
@@ -862,7 +884,7 @@ MyGame.main = (function(graphics) {
         creeps.splice(c, 1);
       }
       if(hearts<1){
-        console.log('you lose');
+        youLose();
       }
       if(drawX>400){
         var angle=0;
@@ -884,7 +906,7 @@ MyGame.main = (function(graphics) {
 		ctx.stroke();
 	}
 
-  function drawDots() { //Draw edge dots, temporarily to represent edges.
+  function drawEdgeSquares(){
     ctx.globalAlpha = 0.5;
     ctx.fillStyle = "white";
     ctx.beginPath();
@@ -903,6 +925,9 @@ MyGame.main = (function(graphics) {
       grid[(xx - 400) / 40][yy / 40].shortestPathNumberLeftToRight=1000;
     }
     ctx.globalAlpha = 1;
+  }
+
+  function drawDots() { //Draw edge dots, temporarily to represent edges.
 		if(showShortestPathUpToDown){
 			ctx.fillStyle="#0D2F5B"
 	    for (var i=0;i<grid.length;i++){
@@ -975,6 +1000,28 @@ MyGame.main = (function(graphics) {
         var y = Math.round(Math.random()*2+6);
         makeCreep(-i,y,0)
       }
+  }
+
+  function youLose(){
+    youLost = true;
+    var hsName = []
+		var hsScore = []
+		if(localStorage.getItem("highscore") !== null){
+			hsName = JSON.parse(localStorage.getItem("highscore"))
+			hsScore = JSON.parse(localStorage.getItem("score"))
+		}
+		if(hsScore.length>=7){
+			if(score>hsScore[7]){
+        drawInputHSBox = true;
+			}
+		}
+		// graphics.context.fillStyle="black";
+		// graphics.context.fillRect(250,420,480,130);
+		// graphics.context.stroke;
+		// var show = document.getElementById("inputHighScore");
+		// if(show.style.display === "none"){
+		// 	show.style.display = "block";
+		// }
   }
 
 	function getKeyShortcut(keyCode){
@@ -1276,54 +1323,56 @@ MyGame.main = (function(graphics) {
   }
 
   function handleInputs(keyCode, elapsedTime) {
-    if (keyCode === 39) { //right
-			creeps[0].gridX+=1;
-    }
-    else if (keyCode === 37) { //left
-			creeps[0].gridX-=1;
-    }
-    else if (keyCode === 38) { //up
-			creeps[0].gridY-=1;
-		}
-    else if (keyCode === 40) { //down
-			creeps[0].gridY+=1;
-    }
-    // else if (keyCode === 16) { //left shift
-    // }
-    // else if (keyCode === 13) { //enter
-		// 	// for (var i=0; i<grid.length;i++){
-		// 	// 		// console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
-		// 	// 		// console.log(grid[i][0].shortestPathNumberLeftToRight,grid[i][1].shortestPathNumberLeftToRight,grid[i][2].shortestPathNumberLeftToRight,grid[i][3].shortestPathNumberLeftToRight,grid[i][4].shortestPathNumberLeftToRight,grid[i][5].shortestPathNumberLeftToRight,grid[i][6].shortestPathNumberLeftToRight,grid[i][7].shortestPathNumberLeftToRight,grid[i][8].shortestPathNumberLeftToRight,grid[i][9].shortestPathNumberLeftToRight,grid[i][10].shortestPathNumberLeftToRight,grid[i][11].shortestPatshortestPathNumberLeftToRight,grid[i][12].shortestPathNumberLeftToRight,grid[i][13].shortestPathNumberLeftToRight,grid[i][14].shortestPathNumberLeftToRight)
-		// 	// }
-    // }
-    else if (keyCode === 27) { //escape
-    }
-    else if (keyCode === upgradeKeyboardShortcut) { //U
-      upgradeTower();
-    }
-    else if (keyCode === sellBuildingKeyboardShortcut) { //S
-      sellTower();
-    }
-    else if (keyCode === nextLevelKeyboardShortcut) { //G
-      startLevel(10);
-    }
-    else if (keyCode === 68) { //D
-      followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
-    }
-    else if (keyCode === 79) { //O
-      if (inOptionsMenu) { //TODO - Remove this - This is just to help quickly draw mazes!
-        inOptionsMenu = false;
-      } else {
-        inOptionsMenu = true;
+    if(!youLost){
+      if (keyCode === 39) { //right
+  			creeps[0].gridX+=1;
       }
+      else if (keyCode === 37) { //left
+  			creeps[0].gridX-=1;
+      }
+      else if (keyCode === 38) { //up
+  			creeps[0].gridY-=1;
+  		}
+      else if (keyCode === 40) { //down
+  			creeps[0].gridY+=1;
+      }
+      // else if (keyCode === 16) { //left shift
+      // }
+      // else if (keyCode === 13) { //enter
+  		// 	// for (var i=0; i<grid.length;i++){
+  		// 	// 		// console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
+  		// 	// 		// console.log(grid[i][0].shortestPathNumberLeftToRight,grid[i][1].shortestPathNumberLeftToRight,grid[i][2].shortestPathNumberLeftToRight,grid[i][3].shortestPathNumberLeftToRight,grid[i][4].shortestPathNumberLeftToRight,grid[i][5].shortestPathNumberLeftToRight,grid[i][6].shortestPathNumberLeftToRight,grid[i][7].shortestPathNumberLeftToRight,grid[i][8].shortestPathNumberLeftToRight,grid[i][9].shortestPathNumberLeftToRight,grid[i][10].shortestPathNumberLeftToRight,grid[i][11].shortestPatshortestPathNumberLeftToRight,grid[i][12].shortestPathNumberLeftToRight,grid[i][13].shortestPathNumberLeftToRight,grid[i][14].shortestPathNumberLeftToRight)
+  		// 	// }
+      // }
+      else if (keyCode === 27) { //escape
+      }
+      else if (keyCode === upgradeKeyboardShortcut) { //U
+        upgradeTower();
+      }
+      else if (keyCode === sellBuildingKeyboardShortcut) { //S
+        sellTower();
+      }
+      else if (keyCode === nextLevelKeyboardShortcut) { //G
+        startLevel(10);
+      }
+      else if (keyCode === 68) { //D
+        followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
+      }
+      else if (keyCode === 79) { //O
+        if (inOptionsMenu) { //TODO - Remove this - This is just to help quickly draw mazes!
+          inOptionsMenu = false;
+        } else {
+          inOptionsMenu = true;
+        }
+      }
+  		else if (keyCode === 82) { //R
+  			creeps[0].gridX=0;
+  			creeps[0].gridY=7;
+  		}
+  		else if(readyForKeyboardShortcut != -1){
+  			getKeyShortcut(keyCode);
+  		}
     }
-		else if (keyCode === 82) { //R
-			creeps[0].gridX=0;
-			creeps[0].gridY=7;
-		}
-		else if(readyForKeyboardShortcut != -1){
-			getKeyShortcut(keyCode);
-		}
   }
 
   function processInput(elapsedTime) {
@@ -1364,6 +1413,7 @@ MyGame.main = (function(graphics) {
     for (var t = 0; t < towers.length; t++) {
       renderTowers(towers[t].x, towers[t].y, towers[t].type);
     }
+    drawEdgeSquares();
 		drawDots();
     if (inOptionsMenu) {
       drawOptionsMenu();
@@ -1395,8 +1445,27 @@ MyGame.main = (function(graphics) {
       var show = document.getElementById("towers");
       show.style.display = "block";
     }
+    if(drawInputHSBox){
+      graphics.context.fillStyle="white";
+      graphics.context.fillRect(250,420,480,130);
+      graphics.context.stroke;
+      var show = document.getElementById("inputHighScore");
+      if(show.style.display === "none"){
+        show.style.display = "block";
+      }
+    } else {
+      var show = document.getElementById("inputHighScore");
+      if(show.style.display === "block"){
+        show.style.display = "none";
+      }
+    }
     for (var c = 0; c < creeps.length; c++) {
       drawCreeps(c);
+    }
+    if(youLost){
+      ctx.fillStyle='red';
+      ctx.font = "100px Arial";
+      ctx.fillText("You Lose!", 300,300);
     }
     ctx.stroke();
   }
@@ -1414,3 +1483,36 @@ MyGame.main = (function(graphics) {
 
   requestAnimationFrame(gameLoop);
 }(MyGame.graphics));
+
+function clickedSubmitHighScore(){
+	var show = document.getElementById("inputHighScore");
+	show.style.display = "none";
+	var hsName = []
+	var hsScore = []
+	if(localStorage.getItem("highscore") !== null){
+		hsName = JSON.parse(localStorage.getItem("highscore"))
+		hsScore = JSON.parse(localStorage.getItem("score"))
+	}
+	if(hsScore.length>7){
+		hsScore.length=7;
+		hsName.length=7;
+	}
+	var n=0;
+	var highscoreName = document.getElementById("highScoreNameText").value;
+	for (var i=0;i<hsScore.length;i++){
+		if(hsScore[i]<=score){
+			n = i;
+			i=hsScore.length;
+		}
+		else{
+			n=hsScore.length;
+		}
+	}
+	hsScore.splice(n,0,score);
+	hsName.splice(n,0,highscoreName);
+	localStorage.setItem("highscore", JSON.stringify(hsName));
+	localStorage.setItem("score", JSON.stringify(hsScore));
+  inHighScoresMenu = true;
+  youLost=false;
+  drawInputHSBox=false;
+}
