@@ -43,6 +43,13 @@ imgPlane.onload = function() {
 };
 imgPlane.src = './images/plane.png';
 
+let imgMissile = new Image();
+imgMissile.isReady = false;
+imgMissile.onload = function() {
+  this.isReady = true;
+};
+imgMissile.src = './images/missile5.png';
+
 let MyGame = {};
 var score = 0;
 var inHighScoresMenu = false;
@@ -159,14 +166,16 @@ MyGame.main = (function(graphics) {
   var canvas = document.getElementById('canvas-main');
   var context = canvas.getContext('2d');
   var ctx = graphics.context;
-  var gold = 500;
-  var hearts = 10;
+  var gold = 200;
+  var hearts = 25;
   var inputStage = [];
 	var tempKeyCode = 'X';
   var towerPlacingGlowX = -120;
   var towerPlacingGlowY = -120;
   var placingTower = false;
   var towerType = 0;
+  var towerSize = 50;
+  var angleAccuracy = .025;
   var taken = false;
   var inMainMenu = false;
   var inOptionsMenu = false;
@@ -222,7 +231,8 @@ MyGame.main = (function(graphics) {
   var saveMenuSelectedTower = -1;
   var towers = [];
   var creeps = [];
-  var grid = []
+  var turretAnimation = [];
+  var grid = [];
   for (let row = 0; row < gridSize; row++) {
     grid.push([]);
     for (let col = 0; col < gridSize; col++) {
@@ -265,6 +275,7 @@ MyGame.main = (function(graphics) {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
   function newGame(){
     inHighScoresMenu=false;
     inOptionsMenu=false;
@@ -295,12 +306,17 @@ MyGame.main = (function(graphics) {
       damage: 10,
       range: 8,
 			rate: 10,
+      shots: 0,
 			sellFor: 8,
 			upgradeCost: 5,
 			initialCost: 10,
 			damageNext: 15,
       rangeNext: 10,
       rateNext: 15,
+      angle: 0,
+      img: imgMissile,
+      size: 30,
+      rotationSpeed: 0.03,
       x: x,
       y: y
     });
@@ -311,16 +327,16 @@ MyGame.main = (function(graphics) {
 			makeShortestPathUpToDown(grid, 1000);
 		}
     if(type==1){
-      score+=20;
+      score+=5;
     }
     if(type==2){
-      score+=30;
+      score+=7;
     }
     if(type==3){
-      score+=20;
+      score+=5;
     }
     if(type==4){
-      score+=30;
+      score+=7;
     }
   }
 
@@ -366,7 +382,7 @@ MyGame.main = (function(graphics) {
   function makeCreep(x,y,type){
     creeps.push({
       type: type,
-      hitpoints: 5,
+      hitpoints: 4,
   		speed: 3,
       direction: 'right',
   		gridX: x, //between 0 and 14
@@ -378,8 +394,7 @@ MyGame.main = (function(graphics) {
     });
   }
 
-	// this function trusts the grid will be square
-	function makeShortestPathLeftToRight(grid, sentinel) {
+	function makeShortestPathLeftToRight(grid, sentinel) { // this function trusts the grid will be square
 	    for (var i = 0; i < grid.length; i++){
 	        for (var j = 0; j < grid.length; j++){
 	            if (grid[i][j].shortestPathNumberLeftToRight != sentinel) grid[i][j].shortestPathNumberLeftToRight = grid.length*grid.length;
@@ -429,8 +444,7 @@ MyGame.main = (function(graphics) {
 	    // return grid;
 	}
 
-	// this function trusts the grid will be square
-	function makeShortestPathUpToDown(grid, sentinel) {
+	function makeShortestPathUpToDown(grid, sentinel) { // this function trusts the grid will be square
 	    for (var i = 0; i < grid.length; i++){
 	        for (var j = 0; j < grid.length; j++){
 	            if (grid[i][j].shortestPathNumber != sentinel) grid[i][j].shortestPathNumber = grid.length*grid.length;
@@ -505,6 +519,7 @@ MyGame.main = (function(graphics) {
     ctx.stroke();
     // ctx.strokeStyle="black"
   }
+
 
   function drawMenu() {
     ctx.globalAlpha = 0.5;
@@ -777,6 +792,7 @@ MyGame.main = (function(graphics) {
     ctx.stroke();
   }
 
+
   function drawAllTowerCoverages() {
     for (var t = 0; t < towers.length; t++) {
       ctx.globalAlpha = 0.3;
@@ -815,6 +831,151 @@ MyGame.main = (function(graphics) {
       }
     }
   }
+
+  function aimTowers(){
+    for (var t=0; t< towers.length; t++){
+      var h=0;
+      for (var c=0; c<creeps.length; c++){
+        var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+        var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+        h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
+        if (h<120){
+          rotateToSource(towers[t], c, h) //Aim at creep within range
+        }
+        else{
+          rotateTower(towers[t],0) //If creep not in range, stay still
+        }
+      }
+      if(h==0){
+        rotateTower(towers[t],0) //If no creeps, stay still
+      }
+    }
+  }
+
+  function rotateTower(tower, angle) {
+    context.save();
+    context.translate(tower.x+20, tower.y+20);
+    if (angle) {
+      if (angle == 1) {
+        tower.angle += tower.rotationSpeed;
+      } else {
+        tower.angle -= tower.rotationSpeed;
+      }
+    }
+    context.rotate(tower.angle);
+    context.drawImage(tower.img, -tower.size / 2, -tower.size / 2, tower.size, tower.size);
+    context.restore();
+  }
+
+  function crossProduct2d(v1, v2) {
+		return (v1.x * v2.y) - (v1.y * v2.x);
+	}
+
+	function computeAngle(rotation, ptCenter, ptTarget) {
+		var v1 = {
+				x : Math.cos(rotation),
+				y : Math.sin(rotation)
+			},
+			v2 = {
+				x : ptTarget.x - ptCenter.x,
+				y : ptTarget.y - ptCenter.y
+			},
+			dp,
+			angle;
+		v2.len = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+		v2.x /= v2.len;
+		v2.y /= v2.len;
+		dp = v1.x * v2.x + v1.y * v2.y;
+		var angle = Math.acos(dp);
+		var cp = crossProduct2d(v1, v2);
+		return {
+			angle : angle,
+			crossProduct : cp
+		};
+	}
+
+	function testTolerance(value, test, tolerance) {
+		if (Math.abs(value - test) < tolerance) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function rotateToSource(tower,c,h){ // TODO: change to creep info here, to be able to shoot at and damage creep from this function.
+		var towerCenter = {x: tower.x-20, y: tower.y-20};
+    var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+    var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+		var creepCenter = {x: cx, y: cy};
+		var result = computeAngle(tower.angle, towerCenter, creepCenter);
+		if (testTolerance(result.angle, 0, .01) === false) {
+			if (result.crossProduct > 0) {
+				rotateTower(tower,1)
+			} else {
+				rotateTower(tower,-1)
+			}
+      tower.shots+=1;
+		}
+    else{
+      rotateTower(tower,0)
+      tower.shots+=1;
+      if(tower.shots >= tower.rate*5){
+        tower.shots=0;
+        var m = Math.min((cx-tower.x),(cy-tower.y));
+        var dx = (cx-tower.x)/m;
+        var dy = (cy-tower.y)/m;
+        if(cx>tower.x && cy>tower.y){
+          dx=-dx;
+          dy=-dy;
+        }
+        turretAnimation.push({
+          origX:tower.x,
+          origY:tower.y,
+          x:tower.x,
+          y:tower.y,
+          dx:dx*7,
+          dy:dy*7,
+          h:h,
+          angle:tower.angle,
+          size:tower.size,
+          img:tower.img,
+          cx:cx,
+          cy:cy,
+          c:c
+        });
+      }
+    }
+	}
+
+  function shootMissile(t){
+    var ta = turretAnimation[t];
+    ta.x-=ta.dx;
+    ta.y-=ta.dy;
+    ctx.save();
+    ctx.translate(ta.x+20, ta.y+20);
+    ctx.rotate(ta.angle);
+    ctx.drawImage(ta.img, -ta.size / 2, -ta.size / 2, ta.size, ta.size);
+    ctx.restore();
+    ctx.stroke();
+    var hypotenuse = Math.sqrt((ta.origX-ta.x)**2 + (ta.origY-ta.y)**2)
+    if(hypotenuse>150){
+      turretAnimation.splice(t,1)
+    }
+    if(Math.abs(ta.x-ta.cx)<2 && Math.abs(ta.y-ta.cy)<2){
+      try{
+        creeps[ta.c].hitpoints-=1; //Damaged a creep
+        score+=3;
+        if(creeps[ta.c].hitpoints==0){ //Killed a creep
+          creeps.splice(ta.c,1);
+          score+=10;
+          gold+=5;
+        }
+      }
+      catch(error){}
+      turretAnimation.splice(t,1);
+    }
+  }
+
 
   function getNextCreepDirection(c){
     var x = creeps[c].gridX;
@@ -995,6 +1156,7 @@ MyGame.main = (function(graphics) {
     ctx.strokeStyle = 'black';
   }
 
+
   function startLevel(numCreeps){
     for (var i=0; i<numCreeps; i++){
         var y = Math.round(Math.random()*2+6);
@@ -1023,6 +1185,7 @@ MyGame.main = (function(graphics) {
 		// 	show.style.display = "block";
 		// }
   }
+
 
 	function getKeyShortcut(keyCode){
     tempKeyCode = String.fromCharCode(keyCode);
@@ -1247,6 +1410,7 @@ MyGame.main = (function(graphics) {
           makeTower(mousePointerX, mousePointerY, towerType);
           gold -= towers[towers.length - 1].initialCost;
           if (gold < 0) {
+            console.log("Not enough Money!")
             gold += towers[towers.length - 1].initialCost;
             var a = (towers[towers.length-1].x-400)/40;
       			var b = (towers[towers.length-1].y)/40;
@@ -1417,7 +1581,8 @@ MyGame.main = (function(graphics) {
 		drawDots();
     if (inOptionsMenu) {
       drawOptionsMenu();
-    } else if(!inMainMenu){
+    }
+    else if(!inMainMenu){
       var show = document.getElementById("towers");
       show.style.display = "block";
       var show = document.getElementById("optionsMenu");
@@ -1425,19 +1590,22 @@ MyGame.main = (function(graphics) {
     }
     if (inMainMenu) {
       drawMainMenu();
-    } else {
+    }
+    else {
       var show = document.getElementById("mainMenu");
       show.style.display = "none";
     }
     if (inHighScoresMenu) {
       drawHighScoresMenu();
-    } else {
+    }
+    else {
       var show = document.getElementById("highScoresMenu");
       show.style.display = "none";
     }
     if (inCreditsMenu) {
       drawCreditsMenu();
-    } else {
+    }
+    else {
       var show = document.getElementById("creditsMenu");
       show.style.display = "none";
     }
@@ -1453,7 +1621,8 @@ MyGame.main = (function(graphics) {
       if(show.style.display === "none"){
         show.style.display = "block";
       }
-    } else {
+    }
+    else {
       var show = document.getElementById("inputHighScore");
       if(show.style.display === "block"){
         show.style.display = "none";
@@ -1461,6 +1630,10 @@ MyGame.main = (function(graphics) {
     }
     for (var c = 0; c < creeps.length; c++) {
       drawCreeps(c);
+    }
+    aimTowers();
+    for (var t=0; t< turretAnimation.length; t++){
+      shootMissile(t)
     }
     if(youLost){
       ctx.fillStyle='red';
@@ -1483,6 +1656,7 @@ MyGame.main = (function(graphics) {
 
   requestAnimationFrame(gameLoop);
 }(MyGame.graphics));
+
 
 function clickedSubmitHighScore(){
 	var show = document.getElementById("inputHighScore");
