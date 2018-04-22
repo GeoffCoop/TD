@@ -13,28 +13,28 @@ imgGroundProjectile.isReady = false;
 imgGroundProjectile.onload = function() {
   this.isReady = true;
 };
-imgGroundProjectile.src = './images/gProjectile.jpg';
+imgGroundProjectile.src = './images/ground-cannon22.png';
 
 let imgGroundBomb = new Image();
 imgGroundBomb.isReady = false;
 imgGroundBomb.onload = function() {
   this.isReady = true;
 };
-imgGroundBomb.src = './images/gBomb.jpg';
+imgGroundBomb.src = './images/ground-bomb.png';
 
 let imgAirProjectile = new Image();
 imgAirProjectile.isReady = false;
 imgAirProjectile.onload = function() {
   this.isReady = true;
 };
-imgAirProjectile.src = './images/aProjectile.jpg';
+imgAirProjectile.src = './images/air-cannon22.png';
 
 let imgAirMissile = new Image();
 imgAirMissile.isReady = false;
 imgAirMissile.onload = function() {
   this.isReady = true;
 };
-imgAirMissile.src = './images/aMissile.jpg';
+imgAirMissile.src = './images/air-bomb.png';
 
 let imgPlane = new Image();
 imgPlane.isReady = false;
@@ -43,12 +43,75 @@ imgPlane.onload = function() {
 };
 imgPlane.src = './images/plane.png';
 
+let imgGroundArrow = new Image();
+imgGroundArrow.isReady = false;
+imgGroundArrow.onload = function() {
+  this.isReady = true;
+};
+imgGroundArrow.src = './images/ground-arrow.png';
+
+let imgGroundMissile = new Image();
+imgGroundMissile.isReady = false;
+imgGroundMissile.onload = function() {
+  this.isReady = true;
+};
+imgGroundMissile.src = './images/ground-missile2.png';
+
+let imgAirArrow = new Image();
+imgAirArrow.isReady = false;
+imgAirArrow.onload = function() {
+  this.isReady = true;
+};
+imgAirArrow.src = './images/air-arrow.png';
+
 let imgMissile = new Image();
 imgMissile.isReady = false;
 imgMissile.onload = function() {
   this.isReady = true;
 };
-imgMissile.src = './images/missile5.png';
+imgMissile.src = './images/air-missile2.png';
+
+let imgPaddle = new Image();
+imgPaddle.isReady = false;
+imgPaddle.onload = function() {
+  this.isReady = true;
+};
+imgPaddle.src = './images/paddle.png';
+
+let imgHb4_1 = new Image();
+imgHb4_1.isReady = false;
+imgHb4_1.onload = function() {
+  this.isReady = true;
+};
+imgHb4_1.src = './images/hb4.1.png';
+
+let imgHb4_2 = new Image();
+imgHb4_2.isReady = false;
+imgHb4_2.onload = function() {
+  this.isReady = true;
+};
+imgHb4_2.src = './images/hb4.2.png';
+
+let imgHb4_3 = new Image();
+imgHb4_3.isReady = false;
+imgHb4_3.onload = function() {
+  this.isReady = true;
+};
+imgHb4_3.src = './images/hb4.3.png';
+
+let imgHb4_4 = new Image();
+imgHb4_4.isReady = false;
+imgHb4_4.onload = function() {
+  this.isReady = true;
+};
+imgHb4_4.src = './images/hb4.4.png';
+
+let imgHb4_5 = new Image();
+imgHb4_5.isReady = false;
+imgHb4_5.onload = function() {
+  this.isReady = true;
+};
+imgHb4_5.src = './images/hb4.5.png';
 
 let MyGame = {};
 var score = 0;
@@ -170,13 +233,14 @@ MyGame.main = (function(graphics) {
   var hearts = 25;
   var inputStage = [];
 	var tempKeyCode = 'X';
-  var towerPlacingGlowX = -120;
-  var towerPlacingGlowY = -120;
+  var towerPlacingGlowX = -200;
+  var towerPlacingGlowY = -200;
   var placingTower = false;
   var towerType = 0;
   var towerSize = 50;
   var angleAccuracy = .025;
   var taken = false;
+  var notEnoughMoney=0;
   var inMainMenu = false;
   var inOptionsMenu = false;
   var inCreditsMenu = false;
@@ -232,6 +296,7 @@ MyGame.main = (function(graphics) {
   var towers = [];
   var creeps = [];
   var turretAnimation = [];
+  var particleExposions = [];
   var grid = [];
   for (let row = 0; row < gridSize; row++) {
     grid.push([]);
@@ -299,22 +364,31 @@ MyGame.main = (function(graphics) {
   }
 
   function makeTower(x, y, type) {
+    var towerImg=imgGroundArrow;
+    if(type==1){
+      towerImg=imgGroundArrow;
+    }
+    if(type==2){
+      towerImg=imgGroundMissile;
+    }
+    if(type==3){
+      towerImg=imgAirArrow;
+    }
+    if(type==4){
+      towerImg=imgMissile;
+    }
     towers.push({
       type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
       level: 1,
-      levelNext: 2,
       damage: 10,
-      range: 8,
-			rate: 10,
+      range: 120,
+			rate: 50,
       shots: 0,
 			sellFor: 8,
-			upgradeCost: 5,
+			upgradeCost: 10,
 			initialCost: 10,
-			damageNext: 15,
-      rangeNext: 10,
-      rateNext: 15,
       angle: 0,
-      img: imgMissile,
+      img: towerImg,
       size: 30,
       rotationSpeed: 0.03,
       x: x,
@@ -359,19 +433,39 @@ MyGame.main = (function(graphics) {
   }
 
  	function upgradeTower() {
+    var tower = towers[menuSelectedTower];
 		if (menuSelectedTower != -1) {
-	    if (towers[menuSelectedTower].level < 3) {
-				if(towers[menuSelectedTower].upgradeCost > gold){
+	    if (tower.level < 3) {
+				if(tower.upgradeCost > gold){
 					console.log('Not enough money!');
+          notEnoughMoney=50;
 				}
 				else{
-					gold-=towers[menuSelectedTower].upgradeCost;
-		      towers[menuSelectedTower].level += 1;
-					if(towers[menuSelectedTower].levelNext == 3){
-						towers[menuSelectedTower].levelNext = "---";
+					gold-=tower.upgradeCost;
+          if(tower.level==1){
+            tower.damage*=2;
+            tower.rate-=10;
+            tower.range+=30;
+            tower.sellFor+=15;
+            tower.size+=10;
+            tower.upgradeCost+=15;
+            tower.rotationSpeed+=.02;
+          }
+          else if(tower.level==2){
+            tower.damage*=2;
+            tower.rate-=10;
+            tower.range+=30;
+            tower.sellFor+=15;
+            tower.size+=10;
+            tower.upgradeCost="---"
+            tower.rotationSpeed+=.02;
+          }
+		      tower.level += 1;
+					if(tower.levelNext == 3){
+						tower.levelNext = "---";
 					}
 					else{
-			      towers[menuSelectedTower].levelNext += 1;
+			      tower.levelNext += 1;
 					}
 		      saveMenuSelectedTower = menuSelectedTower;
 				}
@@ -382,7 +476,7 @@ MyGame.main = (function(graphics) {
   function makeCreep(x,y,type){
     creeps.push({
       type: type,
-      hitpoints: 4,
+      hitpoints: 50,
   		speed: 3,
       direction: 'right',
   		gridX: x, //between 0 and 14
@@ -552,7 +646,7 @@ MyGame.main = (function(graphics) {
       ctx.globalAlpha = 0.5;
       ctx.fillStyle = "white";
       ctx.beginPath();
-      ctx.arc(towers[menuSelectedTower].x + 20, towers[menuSelectedTower].y + 20, 120, 0, Math.PI * 2, true);
+      ctx.arc(towers[menuSelectedTower].x + 20, towers[menuSelectedTower].y + 20, towers[menuSelectedTower].range, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.fill();
       ctx.globalAlpha = 1;
@@ -612,16 +706,24 @@ MyGame.main = (function(graphics) {
       ctx.fillText("Next Level", 265, 280);
       ctx.fillText("Level", 40, 310);
       ctx.fillText(towers[menuSelectedTower].level, 165, 310);
-      ctx.fillText(towers[menuSelectedTower].levelNext, 265, 310);
+      if(towers[menuSelectedTower].level<3){
+        ctx.fillText(towers[menuSelectedTower].level+1, 265, 310);
+        ctx.fillText(towers[menuSelectedTower].damage+10, 265, 340);
+        ctx.fillText(towers[menuSelectedTower].range+2, 265, 370);
+        ctx.fillText(towers[menuSelectedTower].rate-10, 265, 400);
+      }
+      else{
+        ctx.fillText("---", 265, 310);
+        ctx.fillText("---", 265, 340);
+        ctx.fillText("---", 265, 370);
+        ctx.fillText("---", 265, 400);
+      }
       ctx.fillText("Damage", 40, 340);
       ctx.fillText(towers[menuSelectedTower].damage, 165, 340);
-      ctx.fillText(towers[menuSelectedTower].damageNext, 265, 340);
       ctx.fillText("Range", 40, 370);
       ctx.fillText(towers[menuSelectedTower].range, 165, 370);
-      ctx.fillText(towers[menuSelectedTower].rangeNext, 265, 370);
       ctx.fillText("Firing Rate", 40, 400);
       ctx.fillText(towers[menuSelectedTower].rate, 165, 400);
-      ctx.fillText(towers[menuSelectedTower].rateNext, 265, 400);
       ctx.fillText("Targets", 40, 430);
       ctx.fillText(tTargets, 165, 430);
       ctx.fillText("---", 265, 430);
@@ -793,12 +895,74 @@ MyGame.main = (function(graphics) {
   }
 
 
+  function rgb(){
+    let r = Random.nextGaussian(127,127);
+    let g = Random.nextGaussian(127,127);
+    let b = Random.nextGaussian(127,127);
+    r = Math.abs(Math.floor(r));
+    g = Math.abs(Math.floor(g));
+    b = Math.abs(Math.floor(b));
+    return ["rgb(",r,",",g,",",b,")"].join("");
+  }
+
+  function drawBombParticleExplosion(elapsedTime,x,y){
+    let keepMe = [];
+    for (let particle = 0; particle < confettiParticles.length; particle++) {
+      confettiParticles[particle].alive += elapsedTime;
+      confettiParticles[particle].position.x += (elapsedTime * confettiParticles[particle].speed * confettiParticles[particle].direction.x);
+      confettiParticles[particle].position.y += (elapsedTime * confettiParticles[particle].speed * confettiParticles[particle].direction.y);
+      confettiParticles[particle].rotation += confettiParticles[particle].speed / .5;
+      confettiParticles[particle].fill = rgb();
+      if (confettiParticles[particle].alive <= confettiParticles[particle].lifetime) {
+        keepMe.push(confettiParticles[particle]);
+      }
+    }
+    for (let particle = 0; particle < Random.nextGaussian(7, 3); particle++) {
+      let p = {
+        position: { x: 450, y: 500 },
+        direction: Random.nextCircleVector(),
+        speed: Random.nextGaussian( 0.02, 0.01 ),	// pixels per millisecond
+        rotation: 0,
+        lifetime: 500,	// milliseconds
+        alive: 0,
+        size: Random.nextGaussian(5,3),
+        fill: 'rgb(255, 255, 255)',
+        stroke: 'rgb(0, 0, 0)'
+      };
+      keepMe.push(p);
+    }
+    confettiParticles = keepMe;
+  }
+
+  function renderConfetti(){
+    for (let particle = 0; particle < confettiParticles.length; particle++) {
+      drawConfetti(confettiParticles[particle]);
+    }
+  }
+
+  function drawConfetti(p) {
+    if (p.alive > 100) {
+      graphics.context.save();
+      graphics.context.translate(p.position.x + p.size / 2, p.position.y + p.size / 2);
+      graphics.context.rotate(p.rotation);
+      graphics.context.translate(-(p.position.x + p.size / 2), -(p.position.y + p.size / 2));
+
+      graphics.context.fillStyle = p.fill;
+      graphics.context.strokeStyle = p.stroke;
+      graphics.context.fillRect(p.position.x, p.position.y, p.size, p.size);
+      graphics.context.strokeRect(p.position.x, p.position.y, p.size, p.size);
+
+      graphics.context.restore();
+    }
+  }
+
+
   function drawAllTowerCoverages() {
     for (var t = 0; t < towers.length; t++) {
       ctx.globalAlpha = 0.3;
       ctx.fillStyle = "white";
       ctx.beginPath();
-      ctx.arc(towers[t].x + 20, towers[t].y + 20, 120, 0, Math.PI * 2, true);
+      ctx.arc(towers[t].x + 20, towers[t].y + 20, towers[t].range, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.fill();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.0)';
@@ -839,7 +1003,7 @@ MyGame.main = (function(graphics) {
         var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
         var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
         h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-        if (h<120){
+        if (h<towers[t].range){
           rotateToSource(towers[t], c, h) //Aim at creep within range
         }
         else{
@@ -902,7 +1066,7 @@ MyGame.main = (function(graphics) {
 		}
 	}
 
-	function rotateToSource(tower,c,h){ // TODO: change to creep info here, to be able to shoot at and damage creep from this function.
+	function rotateToSource(tower,c,h) {
 		var towerCenter = {x: tower.x-20, y: tower.y-20};
     var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
     var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
@@ -919,7 +1083,7 @@ MyGame.main = (function(graphics) {
     else{
       rotateTower(tower,0)
       tower.shots+=1;
-      if(tower.shots >= tower.rate*5){
+      if(tower.shots >= tower.rate){ //This prevents towers from shooting like 50 shots per second
         tower.shots=0;
         var m = Math.min((cx-tower.x),(cy-tower.y));
         var dx = (cx-tower.x)/m;
@@ -933,15 +1097,16 @@ MyGame.main = (function(graphics) {
           origY:tower.y,
           x:tower.x,
           y:tower.y,
-          dx:dx*7,
-          dy:dy*7,
+          dx:dx*10,
+          dy:dy*10,
           h:h,
           angle:tower.angle,
           size:tower.size,
           img:tower.img,
           cx:cx,
           cy:cy,
-          c:c
+          c:c,
+          tower:tower
         });
       }
     }
@@ -961,17 +1126,25 @@ MyGame.main = (function(graphics) {
     if(hypotenuse>150){
       turretAnimation.splice(t,1)
     }
-    if(Math.abs(ta.x-ta.cx)<2 && Math.abs(ta.y-ta.cy)<2){
+    var splashDamageRange=1;
+    if(ta.tower.type==1 || ta.tower.type==3){
+      splashDamageRange=2;
+    }
+    else{
+      splashDamageRange=5;
+    }
+    if(Math.abs(ta.x-ta.cx)<splashDamageRange && Math.abs(ta.y-ta.cy)<splashDamageRange){
       try{
-        creeps[ta.c].hitpoints-=1; //Damaged a creep
+        creeps[ta.c].hitpoints-=ta.tower.damage; //Damaged a creep
         score+=3;
         if(creeps[ta.c].hitpoints==0){ //Killed a creep
           creeps.splice(ta.c,1);
           score+=10;
           gold+=5;
+          // particleExposions.push({x:ta.x, y:ta.y})
         }
       }
-      catch(error){}
+      catch(error){console.error(error)}
       turretAnimation.splice(t,1);
     }
   }
@@ -1054,8 +1227,25 @@ MyGame.main = (function(graphics) {
           if(creeps[c].direction=='up'){angle=Math.PI*3/2;}
           if(creeps[c].direction=='left'){angle=Math.PI;}
           if(creeps[c].direction=='down'){angle=Math.PI/2;}
+        } catch(error){}
+        try{
+          if(creeps[c].hitpoints==50){
+            ctx.drawImage(imgHb4_1, drawX, drawY-5,20,5)
+          }
+          else if(creeps[c].hitpoints==40){
+            ctx.drawImage(imgHb4_2, drawX, drawY-5,20,5)
+          }
+          else if(creeps[c].hitpoints==30){
+            ctx.drawImage(imgHb4_3, drawX, drawY-5,20,5)
+          }
+          else if(creeps[c].hitpoints==20){
+            ctx.drawImage(imgHb4_4, drawX, drawY-5,20,5)
+          }
+          else if(creeps[c].hitpoints==10){
+            ctx.drawImage(imgHb4_5, drawX, drawY-5,20,5)
+          }
         } catch(error){
-          // console.error(error);
+          // console.error(error)
         }
         ctx.save();
         ctx.translate(drawX+10, drawY+10);
@@ -1410,6 +1600,7 @@ MyGame.main = (function(graphics) {
           makeTower(mousePointerX, mousePointerY, towerType);
           gold -= towers[towers.length - 1].initialCost;
           if (gold < 0) {
+            notEnoughMoney=30;
             console.log("Not enough Money!")
             gold += towers[towers.length - 1].initialCost;
             var a = (towers[towers.length-1].x-400)/40;
@@ -1420,8 +1611,8 @@ MyGame.main = (function(graphics) {
             makeShortestPathLeftToRight(grid,1000);
             makeShortestPathUpToDown(grid,1000);
           }
-          towerPlacingGlowX = -120;
-          towerPlacingGlowY = -120;
+          towerPlacingGlowX = -200;
+          towerPlacingGlowY = -200;
           placingTower = false;
           towerType = 0;
           $("#image" + 1).css({
@@ -1442,8 +1633,8 @@ MyGame.main = (function(graphics) {
           });
           $(document).off('mousemove');
         } else if (mousePointerX >= 0 && mousePointerY >= 200 && mousePointerX <= 400 && mousePointerY <= 510) { //If clicked in throw away tower area
-          towerPlacingGlowX = -120;
-          towerPlacingGlowY = -120;
+          towerPlacingGlowX = -200;
+          towerPlacingGlowY = -200;
           placingTower = false;
           towerType = 0;
           $("#image" + 1).css({
@@ -1522,6 +1713,18 @@ MyGame.main = (function(graphics) {
       else if (keyCode === 68) { //D
         followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
       }
+      else if (keyCode === 49) { //1
+        followMouse(1);
+      }
+      else if (keyCode === 50) { //2
+        followMouse(2);
+      }
+      else if (keyCode === 51) { //2
+        followMouse(3);
+      }
+      else if (keyCode === 52) { //2
+        followMouse(4);
+      }
       else if (keyCode === 79) { //O
         if (inOptionsMenu) { //TODO - Remove this - This is just to help quickly draw mazes!
           inOptionsMenu = false;
@@ -1576,6 +1779,19 @@ MyGame.main = (function(graphics) {
     }
     for (var t = 0; t < towers.length; t++) {
       renderTowers(towers[t].x, towers[t].y, towers[t].type);
+    }
+    if(notEnoughMoney>0){
+      notEnoughMoney-=1;
+      var n=(notEnoughMoney>=3? notEnoughMoney-3 : notEnoughMoney)
+      var m=(notEnoughMoney>=6? notEnoughMoney-6 : notEnoughMoney)
+      ctx.strokeStyle='red';
+      ctx.beginPath();
+      ctx.arc(80, 100, notEnoughMoney, 0, Math.PI * 2, true);
+      ctx.arc(80, 100, n, 0, Math.PI * 2, true);
+      ctx.arc(80, 100, m, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.strokeStyle='black';
     }
     drawEdgeSquares();
 		drawDots();
@@ -1640,6 +1856,11 @@ MyGame.main = (function(graphics) {
       ctx.font = "100px Arial";
       ctx.fillText("You Lose!", 300,300);
     }
+    // for (var p=0; p<particleExposions.length; p++){
+    //   console.log(particleExposions[p].x)
+    //   drawBombParticleExplosion(elapsedTime,particleExposions[p].x,particleExposions[p].y);
+    //   renderConfetti();
+    // }
     ctx.stroke();
   }
   window.addEventListener('keydown', function(event) {
