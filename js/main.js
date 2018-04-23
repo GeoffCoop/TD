@@ -200,6 +200,7 @@ let placeTowerSound = new sound("./sounds/placetower.wav");
 let sellTowerSound = new sound("./sounds/sell.wav");
 let upgradeTowerSound = new sound("./sounds/upgrade.wav");
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 let MyGame = {};
 var score = 0;
@@ -229,7 +230,9 @@ MyGame.graphics = (function() {
     context: context
   };
 }());
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
 MyGame.main = (function(graphics) {
   'use strict';
   var verticalEdges = [
@@ -442,7 +445,6 @@ MyGame.main = (function(graphics) {
   buttonEventHandlers();
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   function newGame(){
     inHighScoresMenu=false;
@@ -1485,13 +1487,16 @@ MyGame.main = (function(graphics) {
 		ctx.stroke();
 	}
 
-  function drawEdgeSquares(){
+  function drawPlacingTowerRangeCircle(){
     ctx.globalAlpha = 0.5;
     ctx.fillStyle = "white";
     if(!towerPlacingLocOkay){
       ctx.fillStyle = "red";
     }
     ctx.beginPath();
+  }
+
+  function drawEdgeSquares(){
     ctx.arc(towerPlacingGlowX + 20, towerPlacingGlowY + 20, 120, 0, Math.PI * 2, true);
     ctx.closePath();
     ctx.fill();
@@ -1648,7 +1653,7 @@ MyGame.main = (function(graphics) {
       });
       towerPlacingGlowX = e.pageX - 100-adjustForInspectTool;
       towerPlacingGlowY = e.pageY - 120 - 20;
-			var xxx = Math.floor((e.pageX-100)/40-10);
+			var xxx = Math.floor((e.pageX-100-adjustForInspectTool)/40-10);
 			var yyy = Math.floor((e.pageY-120)/40)
 			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
         var towerPlace=false;
@@ -1663,9 +1668,11 @@ MyGame.main = (function(graphics) {
             towerPlace=true;
         }
         if(towerPlace){
+          console.log(xxx,yyy)
           towerPlacingLocOkay=false;
         }
         else{
+          console.log(xxx,yyy)
           towerPlacingLocOkay=true;
         }
 				// console.log(xxx, yyy) //use to see when mouse changes grid's x and y positions
@@ -1861,6 +1868,12 @@ MyGame.main = (function(graphics) {
           if (a==i && (b==0 || b==1)){
             taken=true;
           }
+          if (b==i && a==13){
+            taken=true;
+          }
+          if (a==i && b==13){
+            taken=true;
+          }
         }
 			}
       if (taken != true) {
@@ -2050,6 +2063,7 @@ MyGame.main = (function(graphics) {
       ctx.stroke();
       ctx.strokeStyle='black';
     }
+    drawPlacingTowerRangeCircle();
     drawEdgeSquares();
 		drawDots();
     if (inOptionsMenu) {
