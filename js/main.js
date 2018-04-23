@@ -43,75 +43,163 @@ imgPlane.onload = function() {
 };
 imgPlane.src = './images/plane.png';
 
+let imgAnt = new Image();
+imgAnt.isReady = false;
+imgAnt.onload = function() {
+  this.isReady = true;
+};
+imgAnt.src = './images/ant.png';
+
+let imgSpider = new Image();
+imgSpider.isReady = false;
+imgSpider.onload = function() {
+  this.isReady = true;
+};
+imgSpider.src = './images/spider.png';
+
 let imgGroundArrow = new Image();
 imgGroundArrow.isReady = false;
 imgGroundArrow.onload = function() {
   this.isReady = true;
 };
-imgGroundArrow.src = './images/ground-arrow.png';
+imgGroundArrow.src = './images/air-arrow.png';
 
 let imgGroundMissile = new Image();
 imgGroundMissile.isReady = false;
 imgGroundMissile.onload = function() {
   this.isReady = true;
 };
-imgGroundMissile.src = './images/ground-missile2.png';
+imgGroundMissile.src = './images/air-missile2.png';
 
 let imgAirArrow = new Image();
 imgAirArrow.isReady = false;
 imgAirArrow.onload = function() {
   this.isReady = true;
 };
-imgAirArrow.src = './images/air-arrow.png';
+imgAirArrow.src = './images/ground-arrow.png';
 
 let imgMissile = new Image();
 imgMissile.isReady = false;
 imgMissile.onload = function() {
   this.isReady = true;
 };
-imgMissile.src = './images/air-missile2.png';
-
-let imgPaddle = new Image();
-imgPaddle.isReady = false;
-imgPaddle.onload = function() {
-  this.isReady = true;
-};
-imgPaddle.src = './images/paddle.png';
+imgMissile.src = './images/ground-missile2.png';
 
 let imgHb4_1 = new Image();
 imgHb4_1.isReady = false;
 imgHb4_1.onload = function() {
   this.isReady = true;
 };
-imgHb4_1.src = './images/hb4.1.png';
+imgHb4_1.src = './images/healthbars/hb4.1.png';
 
 let imgHb4_2 = new Image();
 imgHb4_2.isReady = false;
 imgHb4_2.onload = function() {
   this.isReady = true;
 };
-imgHb4_2.src = './images/hb4.2.png';
+imgHb4_2.src = './images/healthbars/hb4.2.png';
 
 let imgHb4_3 = new Image();
 imgHb4_3.isReady = false;
 imgHb4_3.onload = function() {
   this.isReady = true;
 };
-imgHb4_3.src = './images/hb4.3.png';
+imgHb4_3.src = './images/healthbars/hb4.3.png';
 
 let imgHb4_4 = new Image();
 imgHb4_4.isReady = false;
 imgHb4_4.onload = function() {
   this.isReady = true;
 };
-imgHb4_4.src = './images/hb4.4.png';
+imgHb4_4.src = './images/healthbars/hb4.4.png';
 
 let imgHb4_5 = new Image();
 imgHb4_5.isReady = false;
 imgHb4_5.onload = function() {
   this.isReady = true;
 };
-imgHb4_5.src = './images/hb4.5.png';
+imgHb4_5.src = './images/healthbars/hb4.5.png';
+
+let imgHb8_1 = new Image();
+imgHb8_1.isReady = false;
+imgHb8_1.onload = function() {
+  this.isReady = true;
+};
+imgHb8_1.src = './images/healthbars/hb8.1.png';
+
+let imgHb8_2 = new Image();
+imgHb8_2.isReady = false;
+imgHb8_2.onload = function() {
+  this.isReady = true;
+};
+imgHb8_2.src = './images/healthbars/hb8.2.png';
+
+let imgHb8_3 = new Image();
+imgHb8_3.isReady = false;
+imgHb8_3.onload = function() {
+  this.isReady = true;
+};
+imgHb8_3.src = './images/healthbars/hb8.3.png';
+
+let imgHb8_4 = new Image();
+imgHb8_4.isReady = false;
+imgHb8_4.onload = function() {
+  this.isReady = true;
+};
+imgHb8_4.src = './images/healthbars/hb8.4.png';
+
+let imgHb8_5 = new Image();
+imgHb8_5.isReady = false;
+imgHb8_5.onload = function() {
+  this.isReady = true;
+};
+imgHb8_5.src = './images/healthbars/hb8.5.png';
+
+let imgHb8_6 = new Image();
+imgHb8_6.isReady = false;
+imgHb8_6.onload = function() {
+  this.isReady = true;
+};
+imgHb8_6.src = './images/healthbars/hb8.6.png';
+
+let imgHb8_7 = new Image();
+imgHb8_7.isReady = false;
+imgHb8_7.onload = function() {
+  this.isReady = true;
+};
+imgHb8_7.src = './images/healthbars/hb8.7r.png';
+
+let imgHb8_8 = new Image();
+imgHb8_8.isReady = false;
+imgHb8_8.onload = function() {
+  this.isReady = true;
+};
+imgHb8_8.src = './images/healthbars/hb8.8r.png';
+
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+}
+
+let arrowShootSound = new sound("./sounds/arrow.wav");
+let boomSound = new sound("./sounds/boom.mp3");
+let creepDeathSound = new sound("./sounds/creep.wav");
+let errorSound = new sound("./sounds/error.wav");
+let missileShootSound = new sound("./sounds/missile.wav");
+let placeTowerSound = new sound("./sounds/placetower.wav");
+let sellTowerSound = new sound("./sounds/sell.wav");
+let upgradeTowerSound = new sound("./sounds/upgrade.wav");
+
 
 let MyGame = {};
 var score = 0;
@@ -245,8 +333,10 @@ MyGame.main = (function(graphics) {
   var inOptionsMenu = false;
   var inCreditsMenu = false;
 	var firstRound = true;
+  var muted = false;
 	var checkLastX=0;
 	var checkLastY=0;
+  var adjustForInspectTool = 140;
 	var readyForKeyboardShortcut = -1;
 	var upgradeKeyboardShortcut = 85;
 	var sellBuildingKeyboardShortcut = 83;
@@ -297,6 +387,7 @@ MyGame.main = (function(graphics) {
   var creeps = [];
   var turretAnimation = [];
   var particleExposions = [];
+  var deathScores = [];
   var grid = [];
   for (let row = 0; row < gridSize; row++) {
     grid.push([]);
@@ -309,11 +400,22 @@ MyGame.main = (function(graphics) {
       });
     }
   }
+  window.onresize = function(){
+    if ((window.outerHeight - window.innerHeight) > 50) {
+        adjustForInspectTool=0;
+    }
+}
 	for (var i=0; i<entrancesLeftToRight.length; i++){ //Stops player from placing towers in entrances
 		var a = entrancesLeftToRight[i].x
 		var b = entrancesLeftToRight[i].y
-		grid[a][b].shortestPathNumber=1000;
-		grid[a][b].shortestPathNumberLeftToRight=1000;
+		grid[a][b].shortestPathNumber=225;
+		grid[a][b].shortestPathNumberLeftToRight=225;
+	}
+	for (var i=0; i<entrancesUpToDown.length; i++){ //Stops player from placing towers in entrances
+		var a = entrancesUpToDown[i].x
+		var b = entrancesUpToDown[i].y
+		grid[a][b].shortestPathNumber=225;
+		grid[a][b].shortestPathNumberLeftToRight=225;
 	}
 	for (var i=0; i<exitsLeftToRight.length; i++){ //Stops player from placing towers in exits
 		var a = exitsLeftToRight[i].x
@@ -415,6 +517,9 @@ MyGame.main = (function(graphics) {
   }
 
   function sellTower() {
+    if(!muted){
+      sellTowerSound.play();
+    }
     if (menuSelectedTower != -1) {
 			gold+=towers[menuSelectedTower].sellFor;
 			var a = (towers[menuSelectedTower].x-400)/40;
@@ -433,6 +538,9 @@ MyGame.main = (function(graphics) {
   }
 
  	function upgradeTower() {
+    if(!muted){
+      upgradeTowerSound.play();
+    }
     var tower = towers[menuSelectedTower];
 		if (menuSelectedTower != -1) {
 	    if (tower.level < 3) {
@@ -474,11 +582,28 @@ MyGame.main = (function(graphics) {
   }
 
   function makeCreep(x,y,type){
+    var hitpoints=50;
+    var speed=3;
+    var image=imgPlane;
+    if(type==1){
+      image=imgAnt;
+    }
+    else if(type==2){
+      hitpoints=400;
+      speed=5;
+      image=imgSpider;
+    }
+    else if(type==3){
+      hitpoints=50;
+      speed=3;
+      image=imgPlane;
+    }
     creeps.push({
       type: type,
-      hitpoints: 50,
-  		speed: 3,
+      hitpoints: hitpoints,
+  		speed: speed,
       direction: 'right',
+      img: image,
   		gridX: x, //between 0 and 14
   		gridY: y,
       animationX: 0, //between 0 and 40, changes based on speed
@@ -1000,14 +1125,31 @@ MyGame.main = (function(graphics) {
     for (var t=0; t< towers.length; t++){
       var h=0;
       for (var c=0; c<creeps.length; c++){
-        var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-        var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-        h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-        if (h<towers[t].range){
-          rotateToSource(towers[t], c, h) //Aim at creep within range
+        if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
+          if(creeps[c].type==1 || creeps[c].type==2){
+            var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+            var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+            h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
+            if (h<towers[t].range){
+              rotateToSource(towers[t], c, h) //Aim at creep within range
+            }
+            else{
+              rotateTower(towers[t],0) //If creep not in range, stay still
+            }
+          }
         }
-        else{
-          rotateTower(towers[t],0) //If creep not in range, stay still
+        else if(towers[t].type==3 || towers[t].type==4){ //If air tower, search for air troops
+          if(creeps[c].type==3){
+            var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+            var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+            h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
+            if (h<towers[t].range){
+              rotateToSource(towers[t], c, h) //Aim at creep within range
+            }
+            else{
+              rotateTower(towers[t],0) //If creep not in range, stay still
+            }
+          }
         }
       }
       if(h==0){
@@ -1114,6 +1256,16 @@ MyGame.main = (function(graphics) {
 
   function shootMissile(t){
     var ta = turretAnimation[t];
+    if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==1 || ta.tower.type==3)){ //If ground or air cannon
+      if(!muted){
+        arrowShootSound.play();
+      }
+    }
+    else if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==2 || ta.tower.type==4)){ //If ground or air missile
+      if(!muted){
+        missileShootSound.play();
+      }
+    }
     ta.x-=ta.dx;
     ta.y-=ta.dy;
     ctx.save();
@@ -1134,37 +1286,67 @@ MyGame.main = (function(graphics) {
       splashDamageRange=5;
     }
     if(Math.abs(ta.x-ta.cx)<splashDamageRange && Math.abs(ta.y-ta.cy)<splashDamageRange){
+      if(ta.tower.type==2 || ta.tower.type==4){
+        if(!muted){
+          placeTowerSound.play();
+        }
+      }
       try{
         creeps[ta.c].hitpoints-=ta.tower.damage; //Damaged a creep
         score+=3;
-        if(creeps[ta.c].hitpoints==0){ //Killed a creep
+        if(creeps[ta.c].hitpoints<=0){ //Killed a creep
+          if(!muted){
+            creepDeathSound.play();
+          }
+          var tempScore = 0;
+          if(creeps[ta.c].type==1){
+            tempScore+=10;
+            gold+=5;
+          }
+          else if(creeps[ta.c].type==2){
+            tempScore+=30;
+            gold+=20;
+          }
+          else if(creeps[ta.c].type==3){
+            tempScore+=20;
+            gold+=10;
+          }
+          score+=tempScore;
           creeps.splice(ta.c,1);
-          score+=10;
-          gold+=5;
+          deathScores.push({
+            x:ta.cx,
+            y:ta.cy,
+            score: tempScore,
+            timeLeft: 1000
+          })
           // particleExposions.push({x:ta.x, y:ta.y})
         }
       }
-      catch(error){console.error(error)}
+      catch(error){
+        // console.error(error) //This error happens I believ because a turret being shot towards a creep that has already been killed by another turret.
+      }
       turretAnimation.splice(t,1);
     }
   }
 
 
   function getNextCreepDirection(c){
-    var x = creeps[c].gridX;
-    var y = creeps[c].gridY;
-    if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
-			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				creeps[c].direction='right';
-			}
-			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				creeps[c].direction='left';
-			}
-			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				creeps[c].direction='down';
-			}
-			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-				creeps[c].direction='up';
+    if(creeps[c].type!=3){
+      var x = creeps[c].gridX;
+      var y = creeps[c].gridY;
+      if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
+  			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+  				creeps[c].direction='right';
+  			}
+  			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+  				creeps[c].direction='left';
+  			}
+  			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+  				creeps[c].direction='down';
+  			}
+  			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+  				creeps[c].direction='up';
+        }
 			}
 		}
   }
@@ -1210,7 +1392,7 @@ MyGame.main = (function(graphics) {
         getNextCreepDirection(c);
       }
     }
-		if (imgPlane.isReady) {
+		if (imgPlane.isReady && imgSpider.isReady) {
       var drawX = creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
       var drawY = creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
       if(creeps[c].gridX==14 && (creeps[c].gridY==6 || creeps[c].gridY==7 || creeps[c].gridY==8)){
@@ -1229,20 +1411,54 @@ MyGame.main = (function(graphics) {
           if(creeps[c].direction=='down'){angle=Math.PI/2;}
         } catch(error){}
         try{
-          if(creeps[c].hitpoints==50){
-            ctx.drawImage(imgHb4_1, drawX, drawY-5,20,5)
+          if(creeps[c].type==1 || creeps[c].type==3){
+            if(creeps[c].hitpoints>=50){
+              ctx.drawImage(imgHb4_1, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=40 && creeps[c].hitpoints<50){
+              ctx.drawImage(imgHb4_2, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=30 && creeps[c].hitpoints<40){
+              ctx.drawImage(imgHb4_3, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=20 && creeps[c].hitpoints<30){
+              ctx.drawImage(imgHb4_4, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>0 && creeps[c].hitpoints<20){
+              ctx.drawImage(imgHb4_5, drawX, drawY-5,20,5)
+            }
+            else{
+              console.log("this should never happen.")
+            }
           }
-          else if(creeps[c].hitpoints==40){
-            ctx.drawImage(imgHb4_2, drawX, drawY-5,20,5)
-          }
-          else if(creeps[c].hitpoints==30){
-            ctx.drawImage(imgHb4_3, drawX, drawY-5,20,5)
-          }
-          else if(creeps[c].hitpoints==20){
-            ctx.drawImage(imgHb4_4, drawX, drawY-5,20,5)
-          }
-          else if(creeps[c].hitpoints==10){
-            ctx.drawImage(imgHb4_5, drawX, drawY-5,20,5)
+          else if(creeps[c].type==2){
+            if(creeps[c].hitpoints>=400){
+              ctx.drawImage(imgHb8_1, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=350 && creeps[c].hitpoints<400){
+              ctx.drawImage(imgHb8_2, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=300 && creeps[c].hitpoints<350){
+              ctx.drawImage(imgHb8_3, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=250 && creeps[c].hitpoints<300){
+              ctx.drawImage(imgHb8_4, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=200 && creeps[c].hitpoints<250){
+              ctx.drawImage(imgHb8_5, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=150 && creeps[c].hitpoints<200){
+              ctx.drawImage(imgHb8_6, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>=100 && creeps[c].hitpoints<150){
+              ctx.drawImage(imgHb8_7, drawX, drawY-5,20,5)
+            }
+            else if(creeps[c].hitpoints>0 && creeps[c].hitpoints<100){
+              ctx.drawImage(imgHb8_8, drawX, drawY-5,20,5)
+            }
+            else{
+              console.log("this should never happen.")
+            }
           }
         } catch(error){
           // console.error(error)
@@ -1250,7 +1466,14 @@ MyGame.main = (function(graphics) {
         ctx.save();
         ctx.translate(drawX+10, drawY+10);
         ctx.rotate(angle);
-  			ctx.drawImage(imgPlane, -10, -10, 20, 20);
+        var creepImg = imgPlane;
+        try{
+          creepImg = creeps[c].img;
+        }
+        catch(error){
+          // console.error(error)
+        }
+  			ctx.drawImage(creepImg, -10, -10, 20, 20);
         ctx.restore();
       }
 		}
@@ -1350,7 +1573,19 @@ MyGame.main = (function(graphics) {
   function startLevel(numCreeps){
     for (var i=0; i<numCreeps; i++){
         var y = Math.round(Math.random()*2+6);
-        makeCreep(-i,y,0)
+        makeCreep(-i,y,1)
+      }
+  }
+  function startLevelHardCreeps(numCreeps){
+    for (var i=0; i<numCreeps; i++){
+        var y = Math.round(Math.random()*2+6);
+        makeCreep(-i,y,2)
+      }
+  }
+  function startLevelAir(numCreeps){
+    for (var i=0; i<numCreeps; i++){
+        var y = Math.round(Math.random()*2+6);
+        makeCreep(-i,y,3)
       }
   }
 
@@ -1400,10 +1635,10 @@ MyGame.main = (function(graphics) {
     menuSelectedTower = -1;
     $(document).mousemove(function(e) {
       $("#image" + x).css({
-        left: e.pageX - 50,
+        left: e.pageX - 50-adjustForInspectTool,
         top: e.pageY - 50 - 20
       });
-      towerPlacingGlowX = e.pageX - 100;
+      towerPlacingGlowX = e.pageX - 100-adjustForInspectTool;
       towerPlacingGlowY = e.pageY - 120 - 20;
 			var xxx = Math.floor((e.pageX-100)/40-10);
 			var yyy = Math.floor((e.pageY-120)/40)
@@ -1591,15 +1826,26 @@ MyGame.main = (function(graphics) {
 				if (grid[a][b].shortestPathNumber==1000 && grid[a][b].shortestPathNumberLeftToRight==1000){
 					taken=true;
 				}
-				if (grid[a][b].shortestPathNumber==0 || grid[a][b].shortestPathNumberLeftToRight==0){
+				else if (grid[a][b].shortestPathNumber==0 || grid[a][b].shortestPathNumberLeftToRight==0){
 					taken=true;
 				}
+        for(var i=6; i<9; i++){
+          if (b==i && (a==0 || a==1)){
+            taken=true;
+          }
+          if (a==i && (b==0 || b==1)){
+            taken=true;
+          }
+        }
 			}
       if (taken != true) {
         if (mousePointerX >= 400 && mousePointerY >= 0 && mousePointerX <= 1000 && mousePointerY <= 600) { //If tower placed on grid
           makeTower(mousePointerX, mousePointerY, towerType);
           gold -= towers[towers.length - 1].initialCost;
           if (gold < 0) {
+            if(!muted){
+              errorSound.play();
+            }
             notEnoughMoney=30;
             console.log("Not enough Money!")
             gold += towers[towers.length - 1].initialCost;
@@ -1610,6 +1856,11 @@ MyGame.main = (function(graphics) {
             towers.splice(towers.length - 1, 1);
             makeShortestPathLeftToRight(grid,1000);
             makeShortestPathUpToDown(grid,1000);
+          }
+          else{
+            if(!muted){
+              placeTowerSound.play();
+            }
           }
           towerPlacingGlowX = -200;
           towerPlacingGlowY = -200;
@@ -1656,6 +1907,9 @@ MyGame.main = (function(graphics) {
           $(document).off('mousemove');
         }
       } else {
+        if(!muted){
+          errorSound.play();
+        }
         taken = false;
       }
     } else { //If user clicked but isn't placing a tower on the grid
@@ -1679,39 +1933,28 @@ MyGame.main = (function(graphics) {
 
   function handleInputs(keyCode, elapsedTime) {
     if(!youLost){
-      if (keyCode === 39) { //right
-  			creeps[0].gridX+=1;
-      }
-      else if (keyCode === 37) { //left
-  			creeps[0].gridX-=1;
-      }
-      else if (keyCode === 38) { //up
-  			creeps[0].gridY-=1;
-  		}
-      else if (keyCode === 40) { //down
-  			creeps[0].gridY+=1;
-      }
-      // else if (keyCode === 16) { //left shift
-      // }
-      // else if (keyCode === 13) { //enter
-  		// 	// for (var i=0; i<grid.length;i++){
-  		// 	// 		// console.log(grid[i][0].shortestPathNumber,grid[i][1].shortestPathNumber,grid[i][2].shortestPathNumber,grid[i][3].shortestPathNumber,grid[i][4].shortestPathNumber,grid[i][5].shortestPathNumber,grid[i][6].shortestPathNumber,grid[i][7].shortestPathNumber,grid[i][8].shortestPathNumber,grid[i][9].shortestPathNumber,grid[i][10].shortestPathNumber,grid[i][11].shortestPathNumber,grid[i][12].shortestPathNumber,grid[i][13].shortestPathNumber,grid[i][14].shortestPathNumber)
-  		// 	// 		// console.log(grid[i][0].shortestPathNumberLeftToRight,grid[i][1].shortestPathNumberLeftToRight,grid[i][2].shortestPathNumberLeftToRight,grid[i][3].shortestPathNumberLeftToRight,grid[i][4].shortestPathNumberLeftToRight,grid[i][5].shortestPathNumberLeftToRight,grid[i][6].shortestPathNumberLeftToRight,grid[i][7].shortestPathNumberLeftToRight,grid[i][8].shortestPathNumberLeftToRight,grid[i][9].shortestPathNumberLeftToRight,grid[i][10].shortestPathNumberLeftToRight,grid[i][11].shortestPatshortestPathNumberLeftToRight,grid[i][12].shortestPathNumberLeftToRight,grid[i][13].shortestPathNumberLeftToRight,grid[i][14].shortestPathNumberLeftToRight)
-  		// 	// }
-      // }
-      else if (keyCode === 27) { //escape
-      }
-      else if (keyCode === upgradeKeyboardShortcut) { //U
+      if (keyCode === upgradeKeyboardShortcut) { //Default: U
         upgradeTower();
       }
-      else if (keyCode === sellBuildingKeyboardShortcut) { //S
+      else if (keyCode === sellBuildingKeyboardShortcut) { //Default: S
         sellTower();
       }
-      else if (keyCode === nextLevelKeyboardShortcut) { //G
+      else if (keyCode === nextLevelKeyboardShortcut) { //Default: G
         startLevel(10);
       }
-      else if (keyCode === 68) { //D
-        followMouse(1); //TODO - Remove this - This is just to help quickly draw mazes!
+      else if (keyCode === 72) { //H
+        startLevelHardCreeps(10);
+      }
+      else if (keyCode === 74) { //J
+        startLevelAir(10);
+      }
+      else if (keyCode === 77) { //J
+        if(muted){
+          muted=false;
+        }
+        else{
+          muted=true;
+        }
       }
       else if (keyCode === 49) { //1
         followMouse(1);
@@ -1725,17 +1968,6 @@ MyGame.main = (function(graphics) {
       else if (keyCode === 52) { //2
         followMouse(4);
       }
-      else if (keyCode === 79) { //O
-        if (inOptionsMenu) { //TODO - Remove this - This is just to help quickly draw mazes!
-          inOptionsMenu = false;
-        } else {
-          inOptionsMenu = true;
-        }
-      }
-  		else if (keyCode === 82) { //R
-  			creeps[0].gridX=0;
-  			creeps[0].gridY=7;
-  		}
   		else if(readyForKeyboardShortcut != -1){
   			getKeyShortcut(keyCode);
   		}
@@ -1850,6 +2082,16 @@ MyGame.main = (function(graphics) {
     aimTowers();
     for (var t=0; t< turretAnimation.length; t++){
       shootMissile(t)
+    }
+    for (var i=0; i<deathScores.length; i++){
+      var ds=deathScores[i];
+      ctx.font= "12px Arial";
+      ctx.fillText(ds.score,ds.x,ds.y);
+      ds.y-=1;
+      ds.timeLeft-=20;
+      if(ds.timeLeft<=0){
+        deathScores.splice(i,1);
+      }
     }
     if(youLost){
       ctx.fillStyle='red';
