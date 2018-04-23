@@ -345,6 +345,7 @@ MyGame.main = (function(graphics) {
   var showTowerCoverage = false;
   var showShortestPathLeftToRight = false;
   var showShortestPathUpToDown = false;
+  var towerPlacingLocOkay = true;
 	try{
 		showGrid = JSON.parse(localStorage.getItem("showGrid"));
 	}
@@ -355,24 +356,24 @@ MyGame.main = (function(graphics) {
 	}
 	catch(error) {
 	}
-	try{
-		upgradeKeyboardShortcut = JSON.parse(localStorage.getItem("upgrade"));
-	}
-	catch(error) {
-		upgradeKeyboardShortcut = 85;
-	}
-	try{
-		sellBuildingKeyboardShortcut = JSON.parse(localStorage.getItem("sellBuilding"));
-	}
-	catch(error) {
-		sellBuildingKeyboardShortcut = 83;
-	}
-	try{
-		nextLevelKeyboardShortcut = JSON.parse(localStorage.getItem("nextLevel"));
-	}
-	catch(error) {
-		nextLevelKeyboardShortcut = 71;
-	}
+  if(JSON.parse(localStorage.getItem("upgrade")) != null){
+    upgradeKeyboardShortcut=JSON.parse(localStorage.getItem("upgrade"));
+  }
+  else{
+    upgradeKeyboardShortcut=85;
+  }
+  if(JSON.parse(localStorage.getItem("sellBuilding")) != null){
+    sellBuildingKeyboardShortcut=JSON.parse(localStorage.getItem("sellBuilding"));
+  }
+  else{
+    sellBuildingKeyboardShortcut=83;
+  }
+  if(JSON.parse(localStorage.getItem("nextLevel")) != null){
+    nextLevelKeyboardShortcut=JSON.parse(localStorage.getItem("nextLevel"));
+  }
+  else{
+    nextLevelKeyboardShortcut=71;
+  }
 	localStorage.setItem("showGrid", showGrid);
 	localStorage.setItem("showTowerCoverage", showTowerCoverage);
 	localStorage.setItem("upgrade", upgradeKeyboardShortcut);
@@ -402,9 +403,9 @@ MyGame.main = (function(graphics) {
   }
   window.onresize = function(){
     if ((window.outerHeight - window.innerHeight) > 50) {
-        adjustForInspectTool=0;
+      adjustForInspectTool=0;
     }
-}
+  }
 	for (var i=0; i<entrancesLeftToRight.length; i++){ //Stops player from placing towers in entrances
 		var a = entrancesLeftToRight[i].x
 		var b = entrancesLeftToRight[i].y
@@ -1293,7 +1294,9 @@ MyGame.main = (function(graphics) {
       }
       try{
         creeps[ta.c].hitpoints-=ta.tower.damage; //Damaged a creep
-        score+=3;
+        if(!youLost){
+          score+=3;
+        }
         if(creeps[ta.c].hitpoints<=0){ //Killed a creep
           if(!muted){
             creepDeathSound.play();
@@ -1311,7 +1314,9 @@ MyGame.main = (function(graphics) {
             tempScore+=20;
             gold+=10;
           }
-          score+=tempScore;
+          if(!youLost){
+            score+=tempScore;
+          }
           creeps.splice(ta.c,1);
           deathScores.push({
             x:ta.cx,
@@ -1483,6 +1488,9 @@ MyGame.main = (function(graphics) {
   function drawEdgeSquares(){
     ctx.globalAlpha = 0.5;
     ctx.fillStyle = "white";
+    if(!towerPlacingLocOkay){
+      ctx.fillStyle = "red";
+    }
     ctx.beginPath();
     ctx.arc(towerPlacingGlowX + 20, towerPlacingGlowY + 20, 120, 0, Math.PI * 2, true);
     ctx.closePath();
@@ -1643,6 +1651,23 @@ MyGame.main = (function(graphics) {
 			var xxx = Math.floor((e.pageX-100)/40-10);
 			var yyy = Math.floor((e.pageY-120)/40)
 			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
+        var towerPlace=false;
+        for(var i=6; i<=8; i++){
+          if(xxx==i && (yyy==0 || yyy==1))
+            towerPlace=true;
+          if(xxx==i && (yyy==14 || yyy==13))
+            towerPlace=true;
+          if(yyy==i && (xxx==0 || xxx==1))
+            towerPlace=true;
+          if(yyy==i && (xxx==14 || xxx==13))
+            towerPlace=true;
+        }
+        if(towerPlace){
+          towerPlacingLocOkay=false;
+        }
+        else{
+          towerPlacingLocOkay=true;
+        }
 				// console.log(xxx, yyy) //use to see when mouse changes grid's x and y positions
 			}
 			checkLastX=xxx;
