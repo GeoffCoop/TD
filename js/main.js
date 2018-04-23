@@ -1589,12 +1589,14 @@ MyGame.main = (function(graphics) {
         makeCreep(-i,y,1)
       }
   }
+
   function startLevelHardCreeps(numCreeps){
     for (var i=0; i<numCreeps; i++){
         var y = Math.round(Math.random()*2+6);
         makeCreep(-i,y,2)
       }
   }
+  
   function startLevelAir(numCreeps){
     for (var i=0; i<numCreeps; i++){
         var y = Math.round(Math.random()*2+6);
