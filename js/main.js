@@ -1137,30 +1137,32 @@ MyGame.main = (function(graphics) {
     for (var t=0; t< towers.length; t++){
       var h=0;
       for (var c=0; c<creeps.length; c++){
-        ///////////TODO: if creeps.x>400
-        if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
-          if(creeps[c].type==1 || creeps[c].type==2){
-            var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-            var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-            h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-            if (h<towers[t].range){
-              rotateToSource(towers[t], c, h) //Aim at creep within range
-            }
-            else{
-              rotateTower(towers[t],0) //If creep not in range, stay still
+        if(creeps[c].gridX >= 0){
+          console.log('here')
+          if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
+            if(creeps[c].type==1 || creeps[c].type==2){
+              var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+              var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+              h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
+              if (h<towers[t].range){
+                rotateToSource(towers[t], c, h) //Aim at creep within range
+              }
+              else{
+                rotateTower(towers[t],0) //If creep not in range, stay still
+              }
             }
           }
-        }
-        else if(towers[t].type==3 || towers[t].type==4){ //If air tower, search for air troops
-          if(creeps[c].type==3){
-            var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-            var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-            h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-            if (h<towers[t].range){
-              rotateToSource(towers[t], c, h) //Aim at creep within range
-            }
-            else{
-              rotateTower(towers[t],0) //If creep not in range, stay still
+          else if(towers[t].type==3 || towers[t].type==4){ //If air tower, search for air troops
+            if(creeps[c].type==3){
+              var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
+              var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
+              h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
+              if (h<towers[t].range){
+                rotateToSource(towers[t], c, h) //Aim at creep within range
+              }
+              else{
+                rotateTower(towers[t],0) //If creep not in range, stay still
+              }
             }
           }
         }
@@ -1434,7 +1436,7 @@ MyGame.main = (function(graphics) {
         hearts-=1;
         creeps.splice(c, 1);
       }
-      if(creeps[c].gridY==14 && (creeps[c].gridX==6 || creeps[c].gridX==7 || creeps[c].gridX==8)){
+      else if(creeps[c].gridY==14 && (creeps[c].gridX==6 || creeps[c].gridX==7 || creeps[c].gridX==8)){
         hearts-=1;
         creeps.splice(c, 1);
       }
@@ -1710,14 +1712,17 @@ MyGame.main = (function(graphics) {
     towerType = x;
     menuSelectedTower = -1;
     $(document).mousemove(function(e) {
+      var rect = canvas.getBoundingClientRect();
+      var myX = e.clientX -rect.left;
+      var myY =  e.clientY-rect.top;
       $("#image" + x).css({
-        left: e.pageX - 50-adjustForInspectTool,
-        top: e.pageY - 50 - 20
+        left: myX+30,
+        top: myY + 50
       });
-      towerPlacingGlowX = e.pageX - 100-adjustForInspectTool;
-      towerPlacingGlowY = e.pageY - 120 - 20;
-			var xxx = Math.floor((e.pageX-100-adjustForInspectTool)/40-10);
-			var yyy = Math.floor((e.pageY-120)/40)
+      towerPlacingGlowX = myX-20;
+      towerPlacingGlowY = myY-20;
+			var xxx = Math.floor((myX)/40-10);
+			var yyy = Math.floor((myY)/40)
 			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
         var okay=true;
         var tempGrid = $.extend(true, [], grid); //deep copy the array
@@ -1749,7 +1754,7 @@ MyGame.main = (function(graphics) {
           }
         }
         catch(error){
-          console.error(error);
+          // console.error(error);
         }
         if(!okay){
           towerPlacingLocOkay=false;
