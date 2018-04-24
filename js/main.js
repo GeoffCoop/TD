@@ -1137,8 +1137,7 @@ MyGame.main = (function(graphics) {
     for (var t=0; t< towers.length; t++){
       var h=0;
       for (var c=0; c<creeps.length; c++){
-        if(creeps[c].gridX >= 0){
-          console.log('here')
+        if(creeps[c].gridX >= 0){ //This makes sure we aren't checking for creeps outside of the game area.
           if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
             if(creeps[c].type==1 || creeps[c].type==2){
               var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
