@@ -321,7 +321,7 @@ MyGame.main = (function(graphics) {
   var context = canvas.getContext('2d');
   var ctx = graphics.context;
   var gold = 200;
-  var hearts = 25;
+  var hearts = 2500;
   var inputStage = [];
 	var tempKeyCode = 'X';
   var towerPlacingGlowX = -200;
@@ -589,28 +589,29 @@ MyGame.main = (function(graphics) {
 		}
   }
 
-  function makeCreep(x,y,type){
+  function makeCreep(x,y,type, dir){
     var hitpoints=50;
-    var speed=3;
+    var speed=2;
     var image=imgPlane;
     if(type==1){
       image=imgAnt;
     }
     else if(type==2){
       hitpoints=400;
-      speed=5;
+      speed=4;
       image=imgSpider;
     }
     else if(type==3){
       hitpoints=50;
-      speed=3;
+      speed=2;
       image=imgPlane;
     }
     creeps.push({
       type: type,
       hitpoints: hitpoints,
   		speed: speed,
-      direction: 'right',
+      mainDirection: dir,
+      direction: dir,
       img: image,
   		gridX: x, //between 0 and 14
   		gridY: y,
@@ -1136,6 +1137,7 @@ MyGame.main = (function(graphics) {
     for (var t=0; t< towers.length; t++){
       var h=0;
       for (var c=0; c<creeps.length; c++){
+        ///////////TODO: if creeps.x>400
         if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
           if(creeps[c].type==1 || creeps[c].type==2){
             var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
@@ -1349,20 +1351,38 @@ MyGame.main = (function(graphics) {
     if(creeps[c].type!=3){
       var x = creeps[c].gridX;
       var y = creeps[c].gridY;
-      if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
-  			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-  				creeps[c].direction='right';
-  			}
-  			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-  				creeps[c].direction='left';
-  			}
-  			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-  				creeps[c].direction='down';
-  			}
-  			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-  				creeps[c].direction='up';
+      if(creeps[c].mainDirection=='right'){
+        if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
+    			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+    				creeps[c].direction='right';
+    			}
+    			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+    				creeps[c].direction='left';
+    			}
+    			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+    				creeps[c].direction='down';
+    			}
+    			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
+    				creeps[c].direction='up';
+          }
         }
 			}
+      else if(creeps[c].mainDirection=='down'){
+        if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
+    			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumber < (grid[x][y].shortestPathNumber))){
+    				creeps[c].direction='right';
+    			}
+    			if(x-1>=0 && (grid[x-1][y].shortestPathNumber < (grid[x][y].shortestPathNumber))){
+    				creeps[c].direction='left';
+    			}
+    			if(y+1 <=14 && (grid[x][y+1].shortestPathNumber < (grid[x][y].shortestPathNumber))){
+    				creeps[c].direction='down';
+    			}
+    			if(y-1 >=0 && (grid[x][y-1].shortestPathNumber < (grid[x][y].shortestPathNumber))){
+    				creeps[c].direction='up';
+          }
+        }
+      }
 		}
   }
 
@@ -1411,6 +1431,10 @@ MyGame.main = (function(graphics) {
       var drawX = creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
       var drawY = creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
       if(creeps[c].gridX==14 && (creeps[c].gridY==6 || creeps[c].gridY==7 || creeps[c].gridY==8)){
+        hearts-=1;
+        creeps.splice(c, 1);
+      }
+      if(creeps[c].gridY==14 && (creeps[c].gridX==6 || creeps[c].gridX==7 || creeps[c].gridX==8)){
         hearts-=1;
         creeps.splice(c, 1);
       }
@@ -1591,25 +1615,54 @@ MyGame.main = (function(graphics) {
   }
 
 
-  function startLevel(numCreeps){
-    for (var i=0; i<numCreeps; i++){
-        var y = Math.round(Math.random()*2+6);
-        makeCreep(-i,y,1)
+  function startLevel1(){
+    for (var i = 0; i < 5; i++) {
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+    }
+    for (var i = 15; i < 25; i++) {
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+    }
+    for (var i = 40; i < 60; i++) {
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+    }
+    for (var i = 45; i < 65; i++) {
+      var y = Math.round(Math.random() * 2 + 6);
+      makeCreep(-i, y, 1,'right');
+    }
+      makeCreep(-130, 7, 2,'right');
+      for (var i = 80; i < 110; i++) {
+        var y = Math.round(Math.random() * 2 + 6);
+        makeCreep(-i, y, 1,'right');
+      }
+      for (var i = 90; i < 100; i++) {
+        var y = Math.round(Math.random() * 2 + 6);
+        makeCreep(-i, y, 1,'right');
       }
   }
 
-  function startLevelHardCreeps(numCreeps){
-    for (var i=0; i<1; i++){
-        var y = Math.round(Math.random()*2+6);
-        makeCreep(-i,y,2)
-      }
+  function startLevel2(numCreeps){
+    for (var i=0; i<5; i++){
+      var y = Math.round(Math.random()*2+6);
+      makeCreep(-i,y,1,'right');
+    }
+    for (var i=0; i<5; i++){
+      var x = Math.round(Math.random()*2+6);
+      makeCreep(x,-i,1,'down');
+    }
   }
 
-  function startLevelAir(numCreeps){
+  function startLevel3(numCreeps){
     for (var i=0; i<numCreeps; i++){
-        var y = Math.round(Math.random()*2+6);
-        makeCreep(-i,y,3)
-      }
+      var y = Math.round(Math.random()*2+6);
+      makeCreep(-i,y,3,'right');
+    }
   }
 
   function youLose(){
@@ -2009,15 +2062,15 @@ MyGame.main = (function(graphics) {
         sellTower();
       }
       else if (keyCode === nextLevelKeyboardShortcut) { //Default: G
-        startLevel(10);
+        startLevel1();
       }
       else if (keyCode === 72) { //H
-        startLevelHardCreeps(10);
+        startLevel2();
       }
       else if (keyCode === 74) { //J
-        startLevelAir(10);
+        startLevel3();
       }
-      else if (keyCode === 77) { //J
+      else if (keyCode === 77) { //M
         if(muted){
           muted=false;
         }
