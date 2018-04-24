@@ -1,0 +1,25 @@
+{
+  "name": "towerdefense",
+  "version": "1.0.0",
+  "description": "CS5410 final project.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattw676/towerDefense.git"
+  },
+  "author": "Matthew Ward & Kyle Cooper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattw676/towerDefense/issues"
+  },
+  "homepage": "https://github.com/mattw676/towerDefense#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
