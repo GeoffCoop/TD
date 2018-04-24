@@ -70,9 +70,28 @@
         <button type="button" id="playNextLevel" style="position:absolute; left: 325px;top: 600px; width: 100px; height: 50px;">Next Level</button>
       </div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+      <script>
+          var gold = 200;
+          var hearts = 2500;
+          var menuSelectedTower = -1;
+          var towers = [];
+          var creeps = [];
+          var grid = [];
+          var firstRound = true;
+          var turretAnimation = [];
+          var muted = true;
+          var gridSize = 15;
+          var readyForKeyboardShortcut = -1;
+          var sellBuildingKeyboardShortcut = 83;
+          var nextLevelKeyboardShortcut = 71;
+          var upgradeKeyboardShortcut = 85;
+          var youLost = false;
+      </script>
       <script src = "./js/random.js"></script>
-      <!-- <script src = "./js/creeps.js"></script> -->
-      <script src="./js/main.js"></script>
+      <script src = "./js/main.js"></script>
+      <script src = "./js/creeps.js"></script>
+      <script src = "./js/tower.js"></script>
+      <script src = "./js/menu.js"></script>
     </header>
   </head>
 

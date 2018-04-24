@@ -1,180 +1,16 @@
 //  Final Project CS5410
 //  By: Matt Ward and Kyle Cooper
 
+// let tower = require('./tower.js');
+// let creep = require('./creeps.js');
+// let menu = require('./menu');
+
 let imgBackground = new Image();
 imgBackground.isReady = false;
 imgBackground.onload = function() {
   this.isReady = true;
 };
 imgBackground.src = './images/brushed.jpg';
-
-let imgGroundProjectile = new Image();
-imgGroundProjectile.isReady = false;
-imgGroundProjectile.onload = function() {
-  this.isReady = true;
-};
-imgGroundProjectile.src = './images/ground-cannon22.png';
-
-let imgGroundBomb = new Image();
-imgGroundBomb.isReady = false;
-imgGroundBomb.onload = function() {
-  this.isReady = true;
-};
-imgGroundBomb.src = './images/ground-bomb.png';
-
-let imgAirProjectile = new Image();
-imgAirProjectile.isReady = false;
-imgAirProjectile.onload = function() {
-  this.isReady = true;
-};
-imgAirProjectile.src = './images/air-cannon22.png';
-
-let imgAirMissile = new Image();
-imgAirMissile.isReady = false;
-imgAirMissile.onload = function() {
-  this.isReady = true;
-};
-imgAirMissile.src = './images/air-bomb.png';
-
-let imgPlane = new Image();
-imgPlane.isReady = false;
-imgPlane.onload = function() {
-  this.isReady = true;
-};
-imgPlane.src = './images/plane.png';
-
-let imgAnt = new Image();
-imgAnt.isReady = false;
-imgAnt.onload = function() {
-  this.isReady = true;
-};
-imgAnt.src = './images/ant.png';
-
-let imgSpider = new Image();
-imgSpider.isReady = false;
-imgSpider.onload = function() {
-  this.isReady = true;
-};
-imgSpider.src = './images/spider.png';
-
-let imgGroundArrow = new Image();
-imgGroundArrow.isReady = false;
-imgGroundArrow.onload = function() {
-  this.isReady = true;
-};
-imgGroundArrow.src = './images/air-arrow.png';
-
-let imgGroundMissile = new Image();
-imgGroundMissile.isReady = false;
-imgGroundMissile.onload = function() {
-  this.isReady = true;
-};
-imgGroundMissile.src = './images/air-missile2.png';
-
-let imgAirArrow = new Image();
-imgAirArrow.isReady = false;
-imgAirArrow.onload = function() {
-  this.isReady = true;
-};
-imgAirArrow.src = './images/ground-arrow.png';
-
-let imgMissile = new Image();
-imgMissile.isReady = false;
-imgMissile.onload = function() {
-  this.isReady = true;
-};
-imgMissile.src = './images/ground-missile2.png';
-
-let imgHb4_1 = new Image();
-imgHb4_1.isReady = false;
-imgHb4_1.onload = function() {
-  this.isReady = true;
-};
-imgHb4_1.src = './images/healthbars/hb4.1.png';
-
-let imgHb4_2 = new Image();
-imgHb4_2.isReady = false;
-imgHb4_2.onload = function() {
-  this.isReady = true;
-};
-imgHb4_2.src = './images/healthbars/hb4.2.png';
-
-let imgHb4_3 = new Image();
-imgHb4_3.isReady = false;
-imgHb4_3.onload = function() {
-  this.isReady = true;
-};
-imgHb4_3.src = './images/healthbars/hb4.3.png';
-
-let imgHb4_4 = new Image();
-imgHb4_4.isReady = false;
-imgHb4_4.onload = function() {
-  this.isReady = true;
-};
-imgHb4_4.src = './images/healthbars/hb4.4.png';
-
-let imgHb4_5 = new Image();
-imgHb4_5.isReady = false;
-imgHb4_5.onload = function() {
-  this.isReady = true;
-};
-imgHb4_5.src = './images/healthbars/hb4.5.png';
-
-let imgHb8_1 = new Image();
-imgHb8_1.isReady = false;
-imgHb8_1.onload = function() {
-  this.isReady = true;
-};
-imgHb8_1.src = './images/healthbars/hb8.1.png';
-
-let imgHb8_2 = new Image();
-imgHb8_2.isReady = false;
-imgHb8_2.onload = function() {
-  this.isReady = true;
-};
-imgHb8_2.src = './images/healthbars/hb8.2.png';
-
-let imgHb8_3 = new Image();
-imgHb8_3.isReady = false;
-imgHb8_3.onload = function() {
-  this.isReady = true;
-};
-imgHb8_3.src = './images/healthbars/hb8.3.png';
-
-let imgHb8_4 = new Image();
-imgHb8_4.isReady = false;
-imgHb8_4.onload = function() {
-  this.isReady = true;
-};
-imgHb8_4.src = './images/healthbars/hb8.4.png';
-
-let imgHb8_5 = new Image();
-imgHb8_5.isReady = false;
-imgHb8_5.onload = function() {
-  this.isReady = true;
-};
-imgHb8_5.src = './images/healthbars/hb8.5.png';
-
-let imgHb8_6 = new Image();
-imgHb8_6.isReady = false;
-imgHb8_6.onload = function() {
-  this.isReady = true;
-};
-imgHb8_6.src = './images/healthbars/hb8.6.png';
-
-let imgHb8_7 = new Image();
-imgHb8_7.isReady = false;
-imgHb8_7.onload = function() {
-  this.isReady = true;
-};
-imgHb8_7.src = './images/healthbars/hb8.7r.png';
-
-let imgHb8_8 = new Image();
-imgHb8_8.isReady = false;
-imgHb8_8.onload = function() {
-  this.isReady = true;
-};
-imgHb8_8.src = './images/healthbars/hb8.8r.png';
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -191,21 +27,17 @@ function sound(src) {
     }
 }
 
-let arrowShootSound = new sound("./sounds/arrow.wav");
 let boomSound = new sound("./sounds/boom.mp3");
 let creepDeathSound = new sound("./sounds/creep.wav");
 let errorSound = new sound("./sounds/error.wav");
-let missileShootSound = new sound("./sounds/missile.wav");
-let placeTowerSound = new sound("./sounds/placetower.wav");
-let sellTowerSound = new sound("./sounds/sell.wav");
-let upgradeTowerSound = new sound("./sounds/upgrade.wav");
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 let MyGame = {};
 var score = 0;
 var inHighScoresMenu = false;
-var youLost = false;
+
 var drawInputHSBox = false;
 
 
@@ -232,6 +64,106 @@ MyGame.graphics = (function() {
 }());
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function makeShortestPathLeftToRight(grid, sentinel) { // this function trusts the grid will be square
+  for (var i = 0; i < grid.length; i++){
+      for (var j = 0; j < grid.length; j++){
+          if (grid[i][j].shortestPathNumberLeftToRight != sentinel) grid[i][j].shortestPathNumberLeftToRight = grid.length*grid.length;
+      }
+  }
+  var frontier = [];
+  var endSpace = [
+      {x:6,y:14},
+      {x:7,y:14},
+      {x:8,y:14}
+  ];
+  for (var i = 0; i < endSpace.length; i++){
+      grid[endSpace[i].y][endSpace[i].x].shortestPathNumberLeftToRight = 0;
+      frontier.push(endSpace[i]);
+  }
+  while (frontier.length != 0) {
+      var focus = frontier.shift();
+      //up
+      if(focus.x != 0){
+          if(grid[focus.y][focus.x - 1].shortestPathNumberLeftToRight != sentinel && grid[focus.y][focus.x-1].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1 ) {
+              grid[focus.y][focus.x-1].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
+              frontier.push({y:focus.y,x:focus.x-1});
+          }
+      }
+      //down
+      if(focus.x != grid.length-1){
+          if (grid[focus.y][focus.x+1].shortestPathNumberLeftToRight != sentinel && grid[focus.y][focus.x+1].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
+              grid[focus.y][focus.x+1].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
+              frontier.push({y:focus.y, x:focus.x+1});
+          }
+      }
+      //left
+      if(focus.y != 0){
+          if (grid[focus.y-1][focus.x].shortestPathNumberLeftToRight != sentinel && grid[focus.y-1][focus.x].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
+              grid[focus.y-1][focus.x].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
+              frontier.push({y:focus.y-1, x:focus.x});
+          }
+      }
+      //right
+      if(focus.y != grid.length-1){
+          if (grid[focus.y+1][focus.x].shortestPathNumberLeftToRight != sentinel && grid[focus.y+1][focus.x].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
+              grid[focus.y+1][focus.x].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
+              frontier.push({y:focus.y+1, x:focus.x});
+          }
+      }
+  }
+  return grid;
+}
+
+function makeShortestPathUpToDown(grid, sentinel) { // this function trusts the grid will be square
+  for (var i = 0; i < grid.length; i++){
+      for (var j = 0; j < grid.length; j++){
+          if (grid[i][j].shortestPathNumber != sentinel) grid[i][j].shortestPathNumber = grid.length*grid.length;
+      }
+  }
+  var frontier = [];
+  var endSpace = [
+      {x:14,y:6},
+      {x:14,y:7},
+      {x:14,y:8}
+  ];
+  for (var i = 0; i < endSpace.length; i++){
+      grid[endSpace[i].y][endSpace[i].x].shortestPathNumber = 0;
+      frontier.push(endSpace[i]);
+  }
+  while (frontier.length != 0) {
+      var focus = frontier.shift();
+      //up
+      if(focus.x != 0){
+          if(grid[focus.y][focus.x - 1].shortestPathNumber != sentinel && grid[focus.y][focus.x-1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1 ) {
+              grid[focus.y][focus.x-1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
+              frontier.push({y:focus.y,x:focus.x-1});
+          }
+      }
+      //down
+      if(focus.x != grid.length-1){
+          if (grid[focus.y][focus.x+1].shortestPathNumber != sentinel && grid[focus.y][focus.x+1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
+              grid[focus.y][focus.x+1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
+              frontier.push({y:focus.y, x:focus.x+1});
+          }
+      }
+      //left
+      if(focus.y != 0){
+          if (grid[focus.y-1][focus.x].shortestPathNumber != sentinel && grid[focus.y-1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
+              grid[focus.y-1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
+              frontier.push({y:focus.y-1, x:focus.x});
+          }
+      }
+      //right
+      if(focus.y != grid.length-1){
+          if (grid[focus.y+1][focus.x].shortestPathNumber != sentinel && grid[focus.y+1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
+              grid[focus.y+1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
+              frontier.push({y:focus.y+1, x:focus.x});
+          }
+      }
+  }
+  return grid;
+}
 
 MyGame.main = (function(graphics) {
   'use strict';
@@ -320,8 +252,7 @@ MyGame.main = (function(graphics) {
   var canvas = document.getElementById('canvas-main');
   var context = canvas.getContext('2d');
   var ctx = graphics.context;
-  var gold = 200;
-  var hearts = 2500;
+  
   var inputStage = [];
 	var tempKeyCode = 'X';
   var towerPlacingGlowX = -200;
@@ -335,15 +266,10 @@ MyGame.main = (function(graphics) {
   var inMainMenu = false;
   var inOptionsMenu = false;
   var inCreditsMenu = false;
-	var firstRound = true;
-  var muted = true; //TODO: Change this to true before submission!!!
+   //TODO: Change this to true before submission!!!
 	var checkLastX=0;
 	var checkLastY=0;
   var adjustForInspectTool = 0; //140 for my computer
-	var readyForKeyboardShortcut = -1;
-	var upgradeKeyboardShortcut = 85;
-	var sellBuildingKeyboardShortcut = 83;
-	var nextLevelKeyboardShortcut = 71;
   var showGrid = false;
   var showTowerCoverage = false;
   var showShortestPathLeftToRight = false;
@@ -384,17 +310,13 @@ MyGame.main = (function(graphics) {
 	localStorage.setItem("nextLevel", nextLevelKeyboardShortcut);
 	document.getElementById("showGridCheckBox").checked = showGrid;
 	document.getElementById("showTowerCoverageCheckBox").checked = showTowerCoverage;
-  var gridSize = 15;
-  var menuSelectedTower = -1;
   var saveMenuSelectedTower = -1;
-  var towers = [];
-  var creeps = [];
-  var turretAnimation = [];
+
   var particleExposions = [];
   var deathScores = [];
-  var grid = [];
   for (let row = 0; row < gridSize; row++) {
     grid.push([]);
+    console.log("pushing")
     for (let col = 0; col < gridSize; col++) {
       grid[row].push({
         x: 400 + row * 40,
@@ -468,259 +390,7 @@ MyGame.main = (function(graphics) {
     makeShortestPathLeftToRight(grid,1000);
   }
 
-  function makeTower(x, y, type) {
-    var towerImg=imgGroundArrow;
-    var initCost=10;
-    if(type==1){
-      towerImg=imgGroundArrow;
-      initCost=8;
-    }
-    if(type==2){
-      towerImg=imgGroundMissile;
-      initCost=12;
-    }
-    if(type==3){
-      towerImg=imgAirArrow;
-      initCost=8;
-    }
-    if(type==4){
-      towerImg=imgMissile;
-      initCost=12;
-    }
-    towers.push({
-      type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
-      level: 1,
-      damage: 10,
-      range: 120,
-			rate: 50,
-      shots: 0,
-			sellFor: 8,
-			upgradeCost: 10,
-			initialCost: initCost,
-      angle: 0,
-      img: towerImg,
-      size: 30,
-      rotationSpeed: 0.03,
-      x: x,
-      y: y
-    });
-    grid[(x - 400) / 40][y / 40].shortestPathNumber=1000;
-    grid[(x - 400) / 40][y / 40].shortestPathNumberLeftToRight=1000;
-		makeShortestPathLeftToRight(grid, 1000);
-		if(firstRound){
-			makeShortestPathUpToDown(grid, 1000);
-		}
-    if(type==1){
-      score+=5;
-    }
-    if(type==2){
-      score+=7;
-    }
-    if(type==3){
-      score+=5;
-    }
-    if(type==4){
-      score+=7;
-    }
-  }
 
-  function sellTower() {
-    if(!muted){
-      sellTowerSound.play();
-    }
-    if (menuSelectedTower != -1) {
-			gold+=towers[menuSelectedTower].sellFor;
-			var a = (towers[menuSelectedTower].x-400)/40;
-			var b = (towers[menuSelectedTower].y)/40;
-			grid[a][b].shortestPathNumber=gridSize*gridSize;
-			grid[a][b].shortestPathNumberLeftToRight=gridSize*gridSize;
-      towers.splice(menuSelectedTower, 1);
-      menuSelectedTower = -1;
-    }
-		var show = document.getElementById("upgradeOrSellButtons");
-		show.style.display = "none";
-		makeShortestPathLeftToRight(grid, 1000);
-		if(firstRound){
-			makeShortestPathUpToDown(grid, 1000);
-		}
-  }
-
- 	function upgradeTower() {
-    if(!muted){
-      upgradeTowerSound.play();
-    }
-    var tower = towers[menuSelectedTower];
-		if (menuSelectedTower != -1) {
-	    if (tower.level < 3) {
-				if(tower.upgradeCost > gold){
-					console.log('Not enough money!');
-          notEnoughMoney=50;
-				}
-				else{
-					gold-=tower.upgradeCost;
-          if(tower.level==1){
-            tower.damage*=2;
-            tower.rate-=10;
-            tower.range+=30;
-            tower.sellFor+=15;
-            tower.size+=10;
-            tower.upgradeCost+=15;
-            tower.rotationSpeed+=.02;
-          }
-          else if(tower.level==2){
-            tower.damage*=2;
-            tower.rate-=10;
-            tower.range+=30;
-            tower.sellFor+=15;
-            tower.size+=10;
-            tower.upgradeCost="---"
-            tower.rotationSpeed+=.02;
-          }
-		      tower.level += 1;
-					if(tower.levelNext == 3){
-						tower.levelNext = "---";
-					}
-					else{
-			      tower.levelNext += 1;
-					}
-		      saveMenuSelectedTower = menuSelectedTower;
-				}
-	    }
-		}
-  }
-
-  function makeCreep(x,y,type, dir){
-    var hitpoints=50;
-    var speed=2;
-    var image=imgPlane;
-    if(type==1){
-      image=imgAnt;
-    }
-    else if(type==2){
-      hitpoints=400;
-      speed=4;
-      image=imgSpider;
-    }
-    else if(type==3){
-      hitpoints=50;
-      speed=2;
-      image=imgPlane;
-    }
-    creeps.push({
-      type: type,
-      hitpoints: hitpoints,
-  		speed: speed,
-      mainDirection: dir,
-      direction: dir,
-      img: image,
-  		gridX: x, //between 0 and 14
-  		gridY: y,
-      animationX: 0, //between 0 and 40, changes based on speed
-      animationY: 0,
-      relativeX: Math.random()*20, //start somewhere different within cell, 20 because the size of the grid's cell is 40, minus 20, the size of the creep's image
-      relativeY: Math.random()*20
-    });
-  }
-
-	function makeShortestPathLeftToRight(grid, sentinel) { // this function trusts the grid will be square
-	    for (var i = 0; i < grid.length; i++){
-	        for (var j = 0; j < grid.length; j++){
-	            if (grid[i][j].shortestPathNumberLeftToRight != sentinel) grid[i][j].shortestPathNumberLeftToRight = grid.length*grid.length;
-	        }
-	    }
-	    var frontier = [];
-			var endSpace = [
-			    {x:6,y:14},
-			    {x:7,y:14},
-			    {x:8,y:14}
-			];
-	    for (var i = 0; i < endSpace.length; i++){
-	        grid[endSpace[i].y][endSpace[i].x].shortestPathNumberLeftToRight = 0;
-	        frontier.push(endSpace[i]);
-	    }
-	    while (frontier.length != 0) {
-	        var focus = frontier.shift();
-	        //up
-	        if(focus.x != 0){
-	            if(grid[focus.y][focus.x - 1].shortestPathNumberLeftToRight != sentinel && grid[focus.y][focus.x-1].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1 ) {
-	                grid[focus.y][focus.x-1].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
-	                frontier.push({y:focus.y,x:focus.x-1});
-	            }
-	        }
-	        //down
-	        if(focus.x != grid.length-1){
-	            if (grid[focus.y][focus.x+1].shortestPathNumberLeftToRight != sentinel && grid[focus.y][focus.x+1].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
-	                grid[focus.y][focus.x+1].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
-	                frontier.push({y:focus.y, x:focus.x+1});
-	            }
-	        }
-	        //left
-	        if(focus.y != 0){
-	            if (grid[focus.y-1][focus.x].shortestPathNumberLeftToRight != sentinel && grid[focus.y-1][focus.x].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
-	                grid[focus.y-1][focus.x].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
-	                frontier.push({y:focus.y-1, x:focus.x});
-	            }
-	        }
-	        //right
-	        if(focus.y != grid.length-1){
-	            if (grid[focus.y+1][focus.x].shortestPathNumberLeftToRight != sentinel && grid[focus.y+1][focus.x].shortestPathNumberLeftToRight > grid[focus.y][focus.x].shortestPathNumberLeftToRight+1){
-	                grid[focus.y+1][focus.x].shortestPathNumberLeftToRight = grid[focus.y][focus.x].shortestPathNumberLeftToRight+1;
-	                frontier.push({y:focus.y+1, x:focus.x});
-	            }
-	        }
-	    }
-	    return grid;
-	}
-
-	function makeShortestPathUpToDown(grid, sentinel) { // this function trusts the grid will be square
-	    for (var i = 0; i < grid.length; i++){
-	        for (var j = 0; j < grid.length; j++){
-	            if (grid[i][j].shortestPathNumber != sentinel) grid[i][j].shortestPathNumber = grid.length*grid.length;
-	        }
-	    }
-	    var frontier = [];
-			var endSpace = [
-			    {x:14,y:6},
-			    {x:14,y:7},
-			    {x:14,y:8}
-			];
-	    for (var i = 0; i < endSpace.length; i++){
-	        grid[endSpace[i].y][endSpace[i].x].shortestPathNumber = 0;
-	        frontier.push(endSpace[i]);
-	    }
-	    while (frontier.length != 0) {
-	        var focus = frontier.shift();
-	        //up
-	        if(focus.x != 0){
-	            if(grid[focus.y][focus.x - 1].shortestPathNumber != sentinel && grid[focus.y][focus.x-1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1 ) {
-	                grid[focus.y][focus.x-1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
-	                frontier.push({y:focus.y,x:focus.x-1});
-	            }
-	        }
-	        //down
-	        if(focus.x != grid.length-1){
-	            if (grid[focus.y][focus.x+1].shortestPathNumber != sentinel && grid[focus.y][focus.x+1].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
-	                grid[focus.y][focus.x+1].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
-	                frontier.push({y:focus.y, x:focus.x+1});
-	            }
-	        }
-	        //left
-	        if(focus.y != 0){
-	            if (grid[focus.y-1][focus.x].shortestPathNumber != sentinel && grid[focus.y-1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
-	                grid[focus.y-1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
-	                frontier.push({y:focus.y-1, x:focus.x});
-	            }
-	        }
-	        //right
-	        if(focus.y != grid.length-1){
-	            if (grid[focus.y+1][focus.x].shortestPathNumber != sentinel && grid[focus.y+1][focus.x].shortestPathNumber > grid[focus.y][focus.x].shortestPathNumber+1){
-	                grid[focus.y+1][focus.x].shortestPathNumber = grid[focus.y][focus.x].shortestPathNumber+1;
-	                frontier.push({y:focus.y+1, x:focus.x});
-	            }
-	        }
-	    }
-	    return grid;
-	}
 
   makeShortestPathUpToDown(grid,1000); //initializes shortestpath grid before any towers are placed.
   makeShortestPathLeftToRight(grid,1000);
@@ -750,287 +420,6 @@ MyGame.main = (function(graphics) {
     ctx.stroke();
     // ctx.strokeStyle="black"
   }
-
-
-  function drawMenu() {
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = "#1F5592";
-    var menuRectX = 0;
-    var menuRectY = 0;
-    var menuRectWidth = 400;
-    var menuRectHeight = canvas.height;
-    ctx.fillRect(menuRectX, menuRectY, menuRectWidth, menuRectHeight);
-    ctx.globalAlpha = 1.0;
-    ctx.font = "50px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText("Tower Defense!", 25, 55);
-    ctx.lineWidth = 3;
-    ctx.moveTo(0, 75);
-    ctx.lineTo(400, 75);
-    ctx.font = "25px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText(gold, 70, 110);
-    ctx.fillText(hearts, 180, 110);
-    ctx.fillText("Score: "+score, 250, 110);
-    ctx.moveTo(0, 125);
-    ctx.lineTo(400, 125);
-    ctx.moveTo(0, 205);
-    ctx.lineTo(400, 205);
-    ctx.lineWidth = 3;
-    ctx.globalAlpha = 0.75;
-    ctx.stroke();
-    if (menuSelectedTower != -1) {
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = "white";
-      ctx.beginPath();
-      ctx.arc(towers[menuSelectedTower].x + 20, towers[menuSelectedTower].y + 20, towers[menuSelectedTower].range, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "#0D2F5B";
-      ctx.fillRect(30, 220, 330, 280);
-      ctx.moveTo(30, 222);
-      ctx.lineTo(360, 220);
-      ctx.moveTo(360, 220);
-      ctx.lineTo(360, 500);
-      ctx.moveTo(360, 500);
-      ctx.lineTo(30, 500);
-      ctx.moveTo(30, 500);
-      ctx.lineTo(30, 222);
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "white";
-      ctx.lineWidth = 2;
-      ctx.moveTo(30, 260);
-      ctx.lineTo(360, 260);
-      ctx.stroke();
-      ctx.lineWidth = 1;
-      ctx.moveTo(150, 260);
-      ctx.lineTo(150, 500);
-      ctx.moveTo(250, 260);
-      ctx.lineTo(250, 500);
-      ctx.moveTo(30, 290);
-      ctx.lineTo(360, 290);
-      ctx.moveTo(30, 320);
-      ctx.lineTo(360, 320);
-      ctx.moveTo(30, 350);
-      ctx.lineTo(360, 350);
-      ctx.moveTo(30, 380);
-      ctx.lineTo(360, 380);
-      ctx.moveTo(30, 410);
-      ctx.lineTo(360, 410);
-      ctx.moveTo(30, 440);
-      ctx.lineTo(360, 440);
-      ctx.moveTo(30, 470);
-      ctx.lineTo(360, 470);
-      ctx.font = "16px Arial";
-      var tType = "";
-      var tTargets = "";
-      if (towers[menuSelectedTower].type == 1) {
-        tType = "Ground Projectile";
-        tTargets = "Ground";
-      } else if (towers[menuSelectedTower].type == 2) {
-        tType = "Ground Bomb";
-        tTargets = "Ground";
-      } else if (towers[menuSelectedTower].type == 3) {
-        tType = "Air Projectile";
-        tTargets = "Air";
-      } else if (towers[menuSelectedTower].type == 4) {
-        tType = "Air Missile";
-        tTargets = "Air";
-      }
-      ctx.fillText(tType, 100, 250);
-      ctx.fillText("Current", 165, 280);
-      ctx.fillText("Next Level", 265, 280);
-      ctx.fillText("Level", 40, 310);
-      ctx.fillText(towers[menuSelectedTower].level, 165, 310);
-      if(towers[menuSelectedTower].level<3){
-        ctx.fillText(towers[menuSelectedTower].level+1, 265, 310);
-        ctx.fillText(towers[menuSelectedTower].damage+10, 265, 340);
-        ctx.fillText(towers[menuSelectedTower].range+2, 265, 370);
-        ctx.fillText(towers[menuSelectedTower].rate-10, 265, 400);
-      }
-      else{
-        ctx.fillText("---", 265, 310);
-        ctx.fillText("---", 265, 340);
-        ctx.fillText("---", 265, 370);
-        ctx.fillText("---", 265, 400);
-      }
-      ctx.fillText("Damage", 40, 340);
-      ctx.fillText(towers[menuSelectedTower].damage, 165, 340);
-      ctx.fillText("Range", 40, 370);
-      ctx.fillText(towers[menuSelectedTower].range, 165, 370);
-      ctx.fillText("Firing Rate", 40, 400);
-      ctx.fillText(towers[menuSelectedTower].rate, 165, 400);
-      ctx.fillText("Targets", 40, 430);
-      ctx.fillText(tTargets, 165, 430);
-      ctx.fillText("---", 265, 430);
-      ctx.fillText("Upgrade Cost", 40, 460);
-      ctx.fillText(towers[menuSelectedTower].upgradeCost, 165, 460);
-      ctx.fillText("Sell For", 40, 490);
-      ctx.fillText(towers[menuSelectedTower].sellFor, 165, 490);
-      var show = document.getElementById("upgradeOrSellButtons");
-      show.style.display = "block";
-      ctx.stroke();
-    } //If there is a tower selected
-    ctx.moveTo(0, 510);
-    ctx.lineTo(400, 510);
-    ctx.moveTo(400, 0);
-    ctx.lineTo(400, 600);
-    ctx.stroke();
-  }
-
-  function drawMainMenu() {
-    inOptionsMenu = false;
-    inMainMenu = true;
-    var show = document.getElementById("towers");
-    show.style.display = "none";
-    var show2 = document.getElementById("mainMenu");
-    show2.style.display = "block";
-    ctx.fillStyle = "#0D2F5B";
-    ctx.globalAlpha = .9;
-    ctx.fillRect(0, 125, 400, 385)
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "white"
-    ctx.lineWidth = 1;
-    ctx.moveTo(0, 180);
-    ctx.lineTo(400, 180);
-    ctx.fillText("Main Menu", 140, 162);
-    ctx.stroke();
-  }
-
-  function drawOptionsMenu() {
-    inMainMenu = false;
-    inOptionsMenu = true;
-    var show = document.getElementById("towers");
-    show.style.display = "none";
-    var show2 = document.getElementById("optionsMenu");
-    show2.style.display = "block";
-    ctx.fillStyle = "#0D2F5B";
-    ctx.globalAlpha = .9;
-    ctx.fillRect(0, 125, 400, 385)
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "white"
-    ctx.lineWidth = 1;
-    ctx.moveTo(0, 180);
-    ctx.lineTo(400, 180);
-    ctx.moveTo(0, 320);
-    ctx.lineTo(400, 320);
-    ctx.moveTo(0, 370);
-    ctx.lineTo(400, 370);
-    ctx.font = "30px Arial";
-    ctx.fillText("Options", 150, 162);
-    ctx.font = "16px Arial";
-    ctx.fillText("Show Grid", 50, 210);
-    ctx.fillText("Show Tower Coverage", 50, 240);
-    ctx.fillText("Show Shortest Path Left to Right", 50, 270);
-    ctx.fillText("Show Shortest Path Up to Down", 50, 300);
-    ctx.font = "30px Arial";
-    ctx.fillText("Controls", 150, 355);
-    ctx.font = "16px Arial";
-		if(readyForKeyboardShortcut==1){
-			ctx.fillStyle="red";
-			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
-			ctx.stroke();
-			ctx.fillStyle="white"
-		}
-		else{
-			ctx.fillText(String.fromCharCode(upgradeKeyboardShortcut), 200, 410);
-			ctx.stroke();
-		}
-		if(readyForKeyboardShortcut==2){
-			ctx.fillStyle="red";
-	    ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
-			ctx.stroke();
-			ctx.fillStyle="white"
-		}
-		else{
-			ctx.fillText(String.fromCharCode(sellBuildingKeyboardShortcut), 200, 440);
-			ctx.stroke();
-		}
-		if(readyForKeyboardShortcut==3){
-			ctx.fillStyle="red";
-			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
-			ctx.stroke();
-			ctx.fillStyle="white"
-		}
-		else{
-			ctx.fillText(String.fromCharCode(nextLevelKeyboardShortcut), 200, 470);
-			ctx.stroke();
-		}
-    ctx.stroke();
-  }
-
-  function drawHighScoresMenu(){
-    inMainMenu = false;
-    inOptionsMenu = false;
-    inCreditsMenu = false;
-    inHighScoresMenu = true;
-    var show = document.getElementById("towers");
-    show.style.display = "none";
-    var show2 = document.getElementById("optionsMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("mainMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("creditsMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("highScoresMenu");
-    show2.style.display = "block";
-    ctx.fillStyle = "#0D2F5B";
-    ctx.globalAlpha = .9;
-    ctx.fillRect(0, 125, 400, 385)
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "white"
-    ctx.lineWidth = 1;
-    ctx.moveTo(0, 180);
-    ctx.lineTo(400, 180);
-    ctx.font = "30px Arial";
-    ctx.fillText("High Scores", 120, 162);
-    ctx.font = "24px Arial";
-    var storedHSNames = [];
-		var storedHsScores = [];
-		if(localStorage.getItem("highscore") !== null){
-			storedHSNames = JSON.parse(localStorage.getItem("highscore"));
-			storedHsScores = JSON.parse(localStorage.getItem("score"));
-		}
-		for (var hs=0;hs<storedHSNames.length;hs++){
-			graphics.context.fillText(storedHsScores[hs]+" - "+storedHSNames[hs],50,220+30*hs);
-		}
-    ctx.stroke();
-  }
-
-  function drawCreditsMenu(){
-    inMainMenu = false;
-    inOptionsMenu = false;
-    inHighScoresMenu = false;
-    inCreditsMenu = true;
-    var show = document.getElementById("towers");
-    show.style.display = "none";
-    var show2 = document.getElementById("optionsMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("mainMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("highScoresMenu");
-    show2.style.display = "none";
-    var show2 = document.getElementById("creditsMenu");
-    show2.style.display = "block";
-    ctx.fillStyle = "#0D2F5B";
-    ctx.globalAlpha = .9;
-    ctx.fillRect(0, 125, 400, 385)
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "white"
-    ctx.lineWidth = 1;
-    ctx.moveTo(0, 180);
-    ctx.lineTo(400, 180);
-    ctx.font = "30px Arial";
-    ctx.fillText("Credits", 150, 162);
-    ctx.font = "20px Arial";
-    ctx.fillText("This game was created by Matt Ward", 20, 240);
-    ctx.fillText("and Kyle Cooper as a project for our", 20, 270);
-    ctx.fillText("CS 5410 Game Development class", 20, 300);
-    ctx.fillText("taught by Professor Dean Mathias.", 20, 330);
-    ctx.stroke();
-  }
-
 
   function rgb(){
     let r = Random.nextGaussian(127,127);
@@ -1092,433 +481,6 @@ MyGame.main = (function(graphics) {
       graphics.context.restore();
     }
   }
-
-
-  function drawAllTowerCoverages() {
-    for (var t = 0; t < towers.length; t++) {
-      ctx.globalAlpha = 0.3;
-      ctx.fillStyle = "white";
-      ctx.beginPath();
-      ctx.arc(towers[t].x + 20, towers[t].y + 20, towers[t].range, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.0)';
-      ctx.globalAlpha = 1;
-      ctx.stroke();
-      ctx.strokeStyle = 'black';
-    }
-  }
-
-  function renderTowers(x, y, type) {
-    if (type == 1) {
-      if (imgGroundProjectile.isReady) {
-        ctx.drawImage(imgGroundProjectile,
-          x, y, 40, 40);
-      }
-    } else if (type == 2) {
-      if (imgGroundBomb.isReady) {
-        ctx.drawImage(imgGroundBomb,
-          x, y, 40, 40);
-      }
-    } else if (type == 3) {
-      if (imgAirProjectile.isReady) {
-        ctx.drawImage(imgAirProjectile,
-          x, y, 40, 40);
-      }
-    } else if (type == 4) {
-      if (imgAirMissile.isReady) {
-        ctx.drawImage(imgAirMissile,
-          x, y, 40, 40);
-      }
-    }
-  }
-
-  function aimTowers(){
-    for (var t=0; t< towers.length; t++){
-      var h=0;
-      for (var c=0; c<creeps.length; c++){
-        if(creeps[c].gridX >= 0){ //This makes sure we aren't checking for creeps outside of the game area.
-          if(towers[t].type==1 || towers[t].type==2){ //If ground tower. search for ground troops
-            if(creeps[c].type==1 || creeps[c].type==2){
-              var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-              var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-              h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-              if (h<towers[t].range){
-                rotateToSource(towers[t], c, h) //Aim at creep within range
-              }
-              else{
-                rotateTower(towers[t],0) //If creep not in range, stay still
-              }
-            }
-          }
-          else if(towers[t].type==3 || towers[t].type==4){ //If air tower, search for air troops
-            if(creeps[c].type==3){
-              var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-              var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-              h = Math.sqrt((cx-towers[t].x)**2 + (cy-towers[t].y)**2)
-              if (h<towers[t].range){
-                rotateToSource(towers[t], c, h) //Aim at creep within range
-              }
-              else{
-                rotateTower(towers[t],0) //If creep not in range, stay still
-              }
-            }
-          }
-        }
-      }
-      if(h==0){
-        rotateTower(towers[t],0) //If no creeps, stay still
-      }
-    }
-  }
-
-  function rotateTower(tower, angle) {
-    context.save();
-    context.translate(tower.x+20, tower.y+20);
-    if (angle) {
-      if (angle == 1) {
-        tower.angle += tower.rotationSpeed;
-      } else {
-        tower.angle -= tower.rotationSpeed;
-      }
-    }
-    context.rotate(tower.angle);
-    context.drawImage(tower.img, -tower.size / 2, -tower.size / 2, tower.size, tower.size);
-    context.restore();
-  }
-
-  function crossProduct2d(v1, v2) {
-		return (v1.x * v2.y) - (v1.y * v2.x);
-	}
-
-	function computeAngle(rotation, ptCenter, ptTarget) {
-		var v1 = {
-				x : Math.cos(rotation),
-				y : Math.sin(rotation)
-			},
-			v2 = {
-				x : ptTarget.x - ptCenter.x,
-				y : ptTarget.y - ptCenter.y
-			},
-			dp,
-			angle;
-		v2.len = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
-		v2.x /= v2.len;
-		v2.y /= v2.len;
-		dp = v1.x * v2.x + v1.y * v2.y;
-		var angle = Math.acos(dp);
-		var cp = crossProduct2d(v1, v2);
-		return {
-			angle : angle,
-			crossProduct : cp
-		};
-	}
-
-	function testTolerance(value, test, tolerance) {
-		if (Math.abs(value - test) < tolerance) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function rotateToSource(tower,c,h) {
-		var towerCenter = {x: tower.x-20, y: tower.y-20};
-    var cx=creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-    var cy=creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-		var creepCenter = {x: cx, y: cy};
-		var result = computeAngle(tower.angle, towerCenter, creepCenter);
-		if (testTolerance(result.angle, 0, .01) === false) {
-			if (result.crossProduct > 0) {
-				rotateTower(tower,1)
-			} else {
-				rotateTower(tower,-1)
-			}
-      tower.shots+=1;
-		}
-    else{
-      rotateTower(tower,0)
-      tower.shots+=1;
-      if(tower.shots >= tower.rate){ //This prevents towers from shooting like 50 shots per second
-        tower.shots=0;
-        var m = Math.min((cx-tower.x),(cy-tower.y));
-        var dx = (cx-tower.x)/m;
-        var dy = (cy-tower.y)/m;
-        if(cx>tower.x && cy>tower.y){
-          dx=-dx;
-          dy=-dy;
-        }
-        turretAnimation.push({
-          origX:tower.x,
-          origY:tower.y,
-          x:tower.x,
-          y:tower.y,
-          dx:dx*10,
-          dy:dy*10,
-          h:h,
-          angle:tower.angle,
-          size:tower.size,
-          img:tower.img,
-          cx:cx,
-          cy:cy,
-          c:c,
-          tower:tower
-        });
-      }
-    }
-	}
-
-  function shootMissile(t){
-    var ta = turretAnimation[t];
-    if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==1 || ta.tower.type==3)){ //If ground or air cannon
-      if(!muted){
-        arrowShootSound.play();
-      }
-    }
-    else if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==2 || ta.tower.type==4)){ //If ground or air missile
-      if(!muted){
-        missileShootSound.play();
-      }
-    }
-    ta.x-=ta.dx;
-    ta.y-=ta.dy;
-    ctx.save();
-    ctx.translate(ta.x+20, ta.y+20);
-    ctx.rotate(ta.angle);
-    ctx.drawImage(ta.img, -ta.size / 2, -ta.size / 2, ta.size, ta.size);
-    ctx.restore();
-    ctx.stroke();
-    var hypotenuse = Math.sqrt((ta.origX-ta.x)**2 + (ta.origY-ta.y)**2)
-    if(hypotenuse>150){
-      turretAnimation.splice(t,1)
-    }
-    var splashDamageRange=1;
-    if(ta.tower.type==1 || ta.tower.type==3){
-      splashDamageRange=2;
-    }
-    else{
-      splashDamageRange=5;
-    }
-    if(Math.abs(ta.x-ta.cx)<splashDamageRange && Math.abs(ta.y-ta.cy)<splashDamageRange){
-      if(ta.tower.type==2 || ta.tower.type==4){
-        if(!muted){
-          placeTowerSound.play();
-        }
-      }
-      try{
-        creeps[ta.c].hitpoints-=ta.tower.damage; //Damaged a creep
-        if(!youLost){
-          score+=3;
-        }
-        if(creeps[ta.c].hitpoints<=0){ //Killed a creep
-          if(!muted){
-            creepDeathSound.play();
-          }
-          var tempScore = 0;
-          if(creeps[ta.c].type==1){
-            tempScore+=10;
-            gold+=5;
-          }
-          else if(creeps[ta.c].type==2){
-            tempScore+=30;
-            gold+=20;
-          }
-          else if(creeps[ta.c].type==3){
-            tempScore+=20;
-            gold+=10;
-          }
-          if(!youLost){
-            score+=tempScore;
-          }
-          creeps.splice(ta.c,1);
-          deathScores.push({
-            x:ta.cx,
-            y:ta.cy,
-            score: tempScore,
-            timeLeft: 1000
-          })
-          // particleExposions.push({x:ta.x, y:ta.y})
-        }
-      }
-      catch(error){
-        // console.error(error) //This error happens I believ because a turret being shot towards a creep that has already been killed by another turret.
-      }
-      turretAnimation.splice(t,1);
-    }
-  }
-
-
-  function getNextCreepDirection(c){
-    if(creeps[c].type!=3){
-      var x = creeps[c].gridX;
-      var y = creeps[c].gridY;
-      if(creeps[c].mainDirection=='right'){
-        if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
-    			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-    				creeps[c].direction='right';
-    			}
-    			if(x-1>=0 && (grid[x-1][y].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-    				creeps[c].direction='left';
-    			}
-    			if(y+1 <=14 && (grid[x][y+1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-    				creeps[c].direction='down';
-    			}
-    			if(y-1 >=0 && (grid[x][y-1].shortestPathNumberLeftToRight < (grid[x][y].shortestPathNumberLeftToRight))){
-    				creeps[c].direction='up';
-          }
-        }
-			}
-      else if(creeps[c].mainDirection=='down'){
-        if(x+1 <=14 && x-1>=0 && y+1 <=14 && y-1 >=0){
-    			if(x+1 <= 14 && (grid[x+1][y].shortestPathNumber < (grid[x][y].shortestPathNumber))){
-    				creeps[c].direction='right';
-    			}
-    			if(x-1>=0 && (grid[x-1][y].shortestPathNumber < (grid[x][y].shortestPathNumber))){
-    				creeps[c].direction='left';
-    			}
-    			if(y+1 <=14 && (grid[x][y+1].shortestPathNumber < (grid[x][y].shortestPathNumber))){
-    				creeps[c].direction='down';
-    			}
-    			if(y-1 >=0 && (grid[x][y-1].shortestPathNumber < (grid[x][y].shortestPathNumber))){
-    				creeps[c].direction='up';
-          }
-        }
-      }
-		}
-  }
-
-	function drawCreeps(c){
-    if(creeps[c].direction=='right'){
-      if(creeps[c].animationX<40){
-        creeps[c].animationX+=creeps[c].speed;
-      }
-      else{
-        creeps[c].animationX=0;
-        creeps[c].gridX+=1;
-        getNextCreepDirection(c);
-      }
-    }
-    else if(creeps[c].direction=='left'){
-      if(creeps[c].animationX>-40){
-        creeps[c].animationX-=creeps[c].speed;
-      }
-      else{
-        creeps[c].animationX=0;
-        creeps[c].gridX-=1;
-        getNextCreepDirection(c);
-      }
-    }
-    else if(creeps[c].direction=='down'){
-      if(creeps[c].animationY<40){
-        creeps[c].animationY+=creeps[c].speed;
-      }
-      else{
-        creeps[c].animationY=0;
-        creeps[c].gridY+=1;
-        getNextCreepDirection(c);
-      }
-    }
-    else if(creeps[c].direction=='up'){
-      if(creeps[c].animationY>-40){
-        creeps[c].animationY-=creeps[c].speed;
-      }
-      else{
-        creeps[c].animationY=0;
-        creeps[c].gridY-=1;
-        getNextCreepDirection(c);
-      }
-    }
-		if (imgPlane.isReady && imgSpider.isReady) {
-      var drawX = creeps[c].gridX*40+400+creeps[c].relativeX+creeps[c].animationX;
-      var drawY = creeps[c].gridY*40+creeps[c].relativeY+creeps[c].animationY;
-      if(creeps[c].gridX==14 && (creeps[c].gridY==6 || creeps[c].gridY==7 || creeps[c].gridY==8)){
-        hearts-=1;
-        creeps.splice(c, 1);
-      }
-      else if(creeps[c].gridY==14 && (creeps[c].gridX==6 || creeps[c].gridX==7 || creeps[c].gridX==8)){
-        hearts-=1;
-        creeps.splice(c, 1);
-      }
-      if(hearts<1){
-        youLose();
-      }
-      if(drawX>400){
-        var angle=0;
-        try{
-          if(creeps[c].direction=='right'){angle=0;}
-          if(creeps[c].direction=='up'){angle=Math.PI*3/2;}
-          if(creeps[c].direction=='left'){angle=Math.PI;}
-          if(creeps[c].direction=='down'){angle=Math.PI/2;}
-        } catch(error){}
-        try{
-          if(creeps[c].type==1 || creeps[c].type==3){
-            if(creeps[c].hitpoints>=50){
-              ctx.drawImage(imgHb4_1, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=40 && creeps[c].hitpoints<50){
-              ctx.drawImage(imgHb4_2, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=30 && creeps[c].hitpoints<40){
-              ctx.drawImage(imgHb4_3, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=20 && creeps[c].hitpoints<30){
-              ctx.drawImage(imgHb4_4, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>0 && creeps[c].hitpoints<20){
-              ctx.drawImage(imgHb4_5, drawX, drawY-5,20,5)
-            }
-            else{
-              console.log("this should never happen.")
-            }
-          }
-          else if(creeps[c].type==2){
-            if(creeps[c].hitpoints>=400){
-              ctx.drawImage(imgHb8_1, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=350 && creeps[c].hitpoints<400){
-              ctx.drawImage(imgHb8_2, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=300 && creeps[c].hitpoints<350){
-              ctx.drawImage(imgHb8_3, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=250 && creeps[c].hitpoints<300){
-              ctx.drawImage(imgHb8_4, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=200 && creeps[c].hitpoints<250){
-              ctx.drawImage(imgHb8_5, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=150 && creeps[c].hitpoints<200){
-              ctx.drawImage(imgHb8_6, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>=100 && creeps[c].hitpoints<150){
-              ctx.drawImage(imgHb8_7, drawX, drawY-5,20,5)
-            }
-            else if(creeps[c].hitpoints>0 && creeps[c].hitpoints<100){
-              ctx.drawImage(imgHb8_8, drawX, drawY-5,20,5)
-            }
-            else{
-              console.log("this should never happen.")
-            }
-          }
-        } catch(error){
-          // console.error(error)
-        }
-        ctx.save();
-        ctx.translate(drawX+10, drawY+10);
-        ctx.rotate(angle);
-        var creepImg = imgPlane;
-        try{
-          creepImg = creeps[c].img;
-        }
-        catch(error){
-          // console.error(error)
-        }
-  			ctx.drawImage(creepImg, -10, -10, 20, 20);
-        ctx.restore();
-      }
-		}
-		ctx.stroke();
-	}
 
   function drawPlacingTowerRangeCircle(){
     ctx.globalAlpha = 0.5;
@@ -1845,7 +807,7 @@ MyGame.main = (function(graphics) {
     var button7 = document.getElementById("playNextLevel");
     if (button7.addEventListener) {
       button7.addEventListener('click', function() {
-        startLevel(10);
+        startLevel1(10);
       });
     }
     var button8 = document.getElementById("upgradeKeyboardShortcut");
@@ -2108,6 +1070,7 @@ MyGame.main = (function(graphics) {
   }
 
   function update(elapsedTime) {
+    if (youLost == true){youLose()}
     processInput(elapsedTime);
     checkCheckBoxes();
     if (saveMenuSelectedTower != -1) { //Restores tower stats after clicking "update" button
@@ -2122,7 +1085,7 @@ MyGame.main = (function(graphics) {
     if (showGrid) {
       drawGrid(context, canvas.width - 400, canvas.height, 40)
     }
-    drawMenu();
+    drawMenu(ctx, canvas.height);
     ctx.strokeStyle="black"
     if (placingTower) {
       var show = document.getElementById("upgradeOrSellButtons");
@@ -2133,10 +1096,10 @@ MyGame.main = (function(graphics) {
       ctx.globalAlpha = 1;
     }
     if (showTowerCoverage) {
-      drawAllTowerCoverages();
+      drawAllTowerCoverages(ctx);
     }
     for (var t = 0; t < towers.length; t++) {
-      renderTowers(towers[t].x, towers[t].y, towers[t].type);
+      renderTowers(towers[t].x, towers[t].y, towers[t].type, ctx);
     }
     if(notEnoughMoney>0){
       notEnoughMoney-=1;
@@ -2155,7 +1118,7 @@ MyGame.main = (function(graphics) {
     drawEdgeSquares();
 		drawDots();
     if (inOptionsMenu) {
-      drawOptionsMenu();
+      drawOptionsMenu(ctx);
     }
     else if(!inMainMenu){
       var show = document.getElementById("towers");
@@ -2164,21 +1127,21 @@ MyGame.main = (function(graphics) {
       show.style.display = "none";
     }
     if (inMainMenu) {
-      drawMainMenu();
+      drawMainMenu(ctx);
     }
     else {
       var show = document.getElementById("mainMenu");
       show.style.display = "none";
     }
     if (inHighScoresMenu) {
-      drawHighScoresMenu();
+      drawHighScoresMenu(ctx);
     }
     else {
       var show = document.getElementById("highScoresMenu");
       show.style.display = "none";
     }
     if (inCreditsMenu) {
-      drawCreditsMenu();
+      drawCreditsMenu(ctx);
     }
     else {
       var show = document.getElementById("creditsMenu");
@@ -2204,11 +1167,11 @@ MyGame.main = (function(graphics) {
       }
     }
     for (var c = 0; c < creeps.length; c++) {
-      drawCreeps(c);
+      drawCreeps(c, ctx);
     }
-    aimTowers();
+    aimTowers(ctx);
     for (var t=0; t< turretAnimation.length; t++){
-      shootMissile(t)
+      shootMissile(t, ctx)
     }
     for (var i=0; i<deathScores.length; i++){
       var ds=deathScores[i];
