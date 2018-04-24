@@ -336,10 +336,10 @@ MyGame.main = (function(graphics) {
   var inOptionsMenu = false;
   var inCreditsMenu = false;
 	var firstRound = true;
-  var muted = false;
+  var muted = true; //TODO: Change this to true before submission!!!
 	var checkLastX=0;
 	var checkLastY=0;
-  var adjustForInspectTool = 140;
+  var adjustForInspectTool = 0; //140 for my computer
 	var readyForKeyboardShortcut = -1;
 	var upgradeKeyboardShortcut = 85;
 	var sellBuildingKeyboardShortcut = 83;
@@ -470,17 +470,22 @@ MyGame.main = (function(graphics) {
 
   function makeTower(x, y, type) {
     var towerImg=imgGroundArrow;
+    var initCost=10;
     if(type==1){
       towerImg=imgGroundArrow;
+      initCost=8;
     }
     if(type==2){
       towerImg=imgGroundMissile;
+      initCost=12;
     }
     if(type==3){
       towerImg=imgAirArrow;
+      initCost=8;
     }
     if(type==4){
       towerImg=imgMissile;
+      initCost=12;
     }
     towers.push({
       type: type, //1-groundProjectile, 2-groundBomb, 3-airProjectile, 4-airMissile
@@ -491,7 +496,7 @@ MyGame.main = (function(graphics) {
       shots: 0,
 			sellFor: 8,
 			upgradeCost: 10,
-			initialCost: 10,
+			initialCost: initCost,
       angle: 0,
       img: towerImg,
       size: 30,
@@ -663,7 +668,7 @@ MyGame.main = (function(graphics) {
 	            }
 	        }
 	    }
-	    // return grid;
+	    return grid;
 	}
 
 	function makeShortestPathUpToDown(grid, sentinel) { // this function trusts the grid will be square
@@ -715,6 +720,9 @@ MyGame.main = (function(graphics) {
 	    }
 	    return grid;
 	}
+
+  makeShortestPathUpToDown(grid,1000); //initializes shortestpath grid before any towers are placed.
+  makeShortestPathLeftToRight(grid,1000);
 
   function renderBackground() {
     if (imgBackground.isReady) {
@@ -1591,12 +1599,12 @@ MyGame.main = (function(graphics) {
   }
 
   function startLevelHardCreeps(numCreeps){
-    for (var i=0; i<numCreeps; i++){
+    for (var i=0; i<1; i++){
         var y = Math.round(Math.random()*2+6);
         makeCreep(-i,y,2)
       }
   }
-  
+
   function startLevelAir(numCreeps){
     for (var i=0; i<numCreeps; i++){
         var y = Math.round(Math.random()*2+6);
@@ -1658,26 +1666,44 @@ MyGame.main = (function(graphics) {
 			var xxx = Math.floor((e.pageX-100-adjustForInspectTool)/40-10);
 			var yyy = Math.floor((e.pageY-120)/40)
 			if(!(xxx==checkLastX && yyy==checkLastY)){ //make sure we don't have to recalculate everything while user moves mouse within same cell.
-        var towerPlace=false;
-        for(var i=6; i<=8; i++){
-          if(xxx==i && (yyy==0 || yyy==1))
-            towerPlace=true;
-          if(xxx==i && (yyy==14 || yyy==13))
-            towerPlace=true;
-          if(yyy==i && (xxx==0 || xxx==1))
-            towerPlace=true;
-          if(yyy==i && (xxx==14 || xxx==13))
-            towerPlace=true;
+        var okay=true;
+        var tempGrid = $.extend(true, [], grid); //deep copy the array
+        if(xxx>=0 && xxx<15 && yyy>=0 && yyy<15){
+          tempGrid[xxx][yyy].shortestPathNumberLeftToRight=1000;
+          tempGrid[xxx][yyy].shortestPathNumber=1000;
+          tempGrid = makeShortestPathUpToDown(tempGrid,1000);
+          tempGrid = makeShortestPathUpToDown(tempGrid,1000);
         }
-        if(towerPlace){
-          console.log(xxx,yyy)
+        for(var i=6; i<=8; i++){
+          if(tempGrid[0][i].shortestPathNumber == 225){
+            okay=false;
+          }
+          if(tempGrid[i][0].shortestPathNumber == 225){
+            okay=false;
+          }
+          if(xxx==i && (yyy==0 || yyy==1))
+            okay=false;
+          if(xxx==i && (yyy==14 || yyy==13))
+            okay=false;
+          if(yyy==i && (xxx==0 || xxx==1))
+            okay=false;
+          if(yyy==i && (xxx==14 || xxx==13))
+            okay=false;
+        }
+        try{
+          if(grid[xxx][yyy].shortestPathNumber==1000){
+            okay=false;
+          }
+        }
+        catch(error){
+          console.error(error);
+        }
+        if(!okay){
           towerPlacingLocOkay=false;
         }
         else{
-          console.log(xxx,yyy)
           towerPlacingLocOkay=true;
         }
-				// console.log(xxx, yyy) //use to see when mouse changes grid's x and y positions
 			}
 			checkLastX=xxx;
 			checkLastY=yyy;
@@ -1878,6 +1904,9 @@ MyGame.main = (function(graphics) {
           }
         }
 			}
+      if(a==checkLastX && b==checkLastY && !towerPlacingLocOkay){
+        taken=true;
+      }
       if (taken != true) {
         if (mousePointerX >= 400 && mousePointerY >= 0 && mousePointerX <= 1000 && mousePointerY <= 600) { //If tower placed on grid
           makeTower(mousePointerX, mousePointerY, towerType);
