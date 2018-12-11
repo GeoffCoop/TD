@@ -1,9 +1,6 @@
 //  Final Project CS5410
 //  By: Matt Ward and Kyle Cooper
 
-// let tower = require('./tower.js');
-// let creep = require('./creeps.js');
-// let menu = require('./menu');
 
 let imgBackground = new Image();
 imgBackground.isReady = false;
@@ -13,8 +10,9 @@ imgBackground.onload = function() {
 imgBackground.src = './images/brushed.jpg';
 
 function sound(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
+    this.sound = new Audio(src);
+    // this.sound = document.createElement("audio");
+    // this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
@@ -421,66 +419,11 @@ MyGame.main = (function(graphics) {
     // ctx.strokeStyle="black"
   }
 
-  function rgb(){
-    let r = Random.nextGaussian(127,127);
-    let g = Random.nextGaussian(127,127);
-    let b = Random.nextGaussian(127,127);
-    r = Math.abs(Math.floor(r));
-    g = Math.abs(Math.floor(g));
-    b = Math.abs(Math.floor(b));
-    return ["rgb(",r,",",g,",",b,")"].join("");
-  }
 
-  function drawBombParticleExplosion(elapsedTime,x,y){
-    let keepMe = [];
-    for (let particle = 0; particle < confettiParticles.length; particle++) {
-      confettiParticles[particle].alive += elapsedTime;
-      confettiParticles[particle].position.x += (elapsedTime * confettiParticles[particle].speed * confettiParticles[particle].direction.x);
-      confettiParticles[particle].position.y += (elapsedTime * confettiParticles[particle].speed * confettiParticles[particle].direction.y);
-      confettiParticles[particle].rotation += confettiParticles[particle].speed / .5;
-      confettiParticles[particle].fill = rgb();
-      if (confettiParticles[particle].alive <= confettiParticles[particle].lifetime) {
-        keepMe.push(confettiParticles[particle]);
-      }
-    }
-    for (let particle = 0; particle < Random.nextGaussian(7, 3); particle++) {
-      let p = {
-        position: { x: 450, y: 500 },
-        direction: Random.nextCircleVector(),
-        speed: Random.nextGaussian( 0.02, 0.01 ),	// pixels per millisecond
-        rotation: 0,
-        lifetime: 500,	// milliseconds
-        alive: 0,
-        size: Random.nextGaussian(5,3),
-        fill: 'rgb(255, 255, 255)',
-        stroke: 'rgb(0, 0, 0)'
-      };
-      keepMe.push(p);
-    }
-    confettiParticles = keepMe;
-  }
 
-  function renderConfetti(){
-    for (let particle = 0; particle < confettiParticles.length; particle++) {
-      drawConfetti(confettiParticles[particle]);
-    }
-  }
 
-  function drawConfetti(p) {
-    if (p.alive > 100) {
-      graphics.context.save();
-      graphics.context.translate(p.position.x + p.size / 2, p.position.y + p.size / 2);
-      graphics.context.rotate(p.rotation);
-      graphics.context.translate(-(p.position.x + p.size / 2), -(p.position.y + p.size / 2));
 
-      graphics.context.fillStyle = p.fill;
-      graphics.context.strokeStyle = p.stroke;
-      graphics.context.fillRect(p.position.x, p.position.y, p.size, p.size);
-      graphics.context.strokeRect(p.position.x, p.position.y, p.size, p.size);
 
-      graphics.context.restore();
-    }
-  }
 
   function drawPlacingTowerRangeCircle(){
     ctx.globalAlpha = 0.5;
@@ -1029,12 +972,15 @@ MyGame.main = (function(graphics) {
       }
       else if (keyCode === nextLevelKeyboardShortcut) { //Default: G
         startLevel1();
+        console.log("G")
       }
       else if (keyCode === 72) { //H
         startLevel2();
+        console.log("H")
       }
       else if (keyCode === 74) { //J
-        startLevel3();
+        startLevel3(5);
+        console.log("J")
       }
       else if (keyCode === 77) { //M
         if(muted){

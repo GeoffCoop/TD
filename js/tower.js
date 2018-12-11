@@ -100,10 +100,10 @@ function makeTower(x, y, type) {
     });
     grid[(x - 400) / 40][y / 40].shortestPathNumber=1000;
     grid[(x - 400) / 40][y / 40].shortestPathNumberLeftToRight=1000;
-        makeShortestPathLeftToRight(grid, 1000);
-        if(firstRound){
-            makeShortestPathUpToDown(grid, 1000);
-        }
+    makeShortestPathLeftToRight(grid, 1000);
+    if(firstRound){
+        makeShortestPathUpToDown(grid, 1000);
+    }
     if(type==1){
         score+=5;
     }
@@ -120,6 +120,7 @@ function makeTower(x, y, type) {
 
 function sellTower() {
     if(!muted){
+      // sellTowerSound.stop();
       sellTowerSound.play();
     }
     if (menuSelectedTower != -1) {
@@ -141,6 +142,7 @@ function sellTower() {
 
 function upgradeTower() {
     if(!muted){
+        // upgradeTowerSound.stop();
         upgradeTowerSound.play();
     }
     var tower = towers[menuSelectedTower];
@@ -361,11 +363,13 @@ function shootMissile(t, ctx){
     var ta = turretAnimation[t];
     if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==1 || ta.tower.type==3)){ //If ground or air cannon
       if(!muted){
+        // arrowShootSound.stop();
         arrowShootSound.play();
       }
     }
     else if(ta.x==ta.origX && ta.y==ta.origY && (ta.tower.type==2 || ta.tower.type==4)){ //If ground or air missile
       if(!muted){
+        // arrowShootSound.stop();
         missileShootSound.play();
       }
     }
@@ -426,7 +430,7 @@ function shootMissile(t, ctx){
             score: tempScore,
             timeLeft: 1000
           })
-          // particleExposions.push({x:ta.x, y:ta.y})
+          particleExposions.push({x:ta.x, y:ta.y})
         }
       }
       catch(error){
